@@ -20,8 +20,15 @@ class Hero:
 
 
     def health(self):
-        self._health -= 1
-        print("Your health is", self._health)
+        if self._health > 1:
+            self._health -= 1
+            print("Your health is", self._health)
+            return True
+        else:
+            self._health -= 1
+            print("Your health has dropped to 0, you die now...")
+            self._aborted = True
+            return False
 
     def move(self, environment):
         """move in the maze, it is noted this function may not work in the debug mode"""
@@ -31,31 +38,28 @@ class Hero:
             # the up arrow key was pressed
             os.system("cls")
             print ("up key pressed")
-            self.health()
-            return True
+            return self.health()
+
 
 
         elif ch2 == b'P' or ch2 == "B":
             # the down arrow key was pressed
             os.system("cls")
             print("down key pressed")
-            self.health()
-            return True
+            return self.health()
 
 
         elif ch2 == b'K' or ch2 == "D":
             # the left arrow key was pressed
             os.system("cls")
             print("left key pressed")
-            self.health()
-            return True
+            return self.health()
 
         elif ch2 == b'M' or ch2 == "C":
             # the right arrow key was pressed
             os.system("cls")
             print("right key pressed")
-            self.health()
-            return True
+            return self.health()
         
         elif ch2 == b'\x1b':
             self._aborted = True

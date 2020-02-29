@@ -32,6 +32,28 @@ class Hero:
             self.aborted = True
             return False
 
+    def check_path(self, environment, direction):
+        if direction == "top":
+            x = 0
+            y = -1
+        elif direction == "bottom":
+            x = 0
+            y = 1
+        elif direction == "right":
+            x = 1
+            y = 0
+        elif direction == "left":
+            x = -1
+            y = 0
+        else:
+            print("Wrong direction passed to the check_path function")
+            return False
+
+        if environment.get_coord(self._coordY + y, self._coordX + x) == 0:
+            return True
+        else:
+            return False
+
     def move(self, environment):
         """move in the maze, it is noted this function may not work in the debug mode"""
         ch2 = getch()
@@ -40,25 +62,57 @@ class Hero:
             # the up arrow key was pressed
             clear_console()
             print("up key pressed")
-            return self.health()
+            if self.check_path(environment, "top"):
+                environment.set_coord(self._coordY, self._coordX, 0)
+                self._coordY -= 1
+                environment.set_coord(self._coordY, self._coordX, 2)
+                return self.health()
+            else:
+                print("Not a valid move")
+                self.health(show=True)
+                return True
 
         elif ch2 == b'P' or ch2 == "B":
             # the down arrow key was pressed
             clear_console()
             print("down key pressed")
-            return self.health()
+            if self.check_path(environment, "bottom"):
+                environment.set_coord(self._coordY, self._coordX, 0)
+                self._coordY += 1
+                environment.set_coord(self._coordY, self._coordX, 2)
+                return self.health()
+            else:
+                print("Not a valid move")
+                self.health(show=True)
+                return True
 
         elif ch2 == b'K' or ch2 == "D":
             # the left arrow key was pressed
             clear_console()
             print("left key pressed")
-            return self.health()
+            if self.check_path(environment, "left"):
+                environment.set_coord(self._coordY, self._coordX, 0)
+                self._coordX -= 1
+                environment.set_coord(self._coordY, self._coordX, 2)
+                return self.health()
+            else:
+                print("Not a valid move")
+                self.health(show=True)
+                return True
 
         elif ch2 == b'M' or ch2 == "C":
             # the right arrow key was pressed
             clear_console()
             print("right key pressed")
-            return self.health()
+            if self.check_path(environment, "right"):
+                environment.set_coord(self._coordY, self._coordX, 0)
+                self._coordX += 1
+                environment.set_coord(self._coordY, self._coordX, 2)
+                return self.health()
+            else:
+                print("Not a valid move")
+                self.health(show=True)
+                return True
 
         elif ch2 == ':':    # Menu for user to use during the game
             command = input(":")
@@ -74,7 +128,7 @@ class Hero:
             elif command == "score":
                 print("This is your score, whatever...")
             else:
-                print("Sorry, not a valid command. Try inputing :help for list of commands")
+                print("Sorry, not a valid command. Try inputting :help for list of commands")
 
         else:
             print("Sorry, not a valid input. Move with arrows and enter commands with \":\"")
@@ -141,4 +195,6 @@ class Hero:
                         self._coordY = y
                         maze[self._coordY][self._coordX] = 2
                         return maze
+
+        maze[self._coordY][self._coordX] = 2
         return maze

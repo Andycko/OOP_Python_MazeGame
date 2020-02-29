@@ -60,11 +60,24 @@ class Hero:
             print("right key pressed")
             return self.health()
 
-        # This is not working on mac
-        elif ch2 == b'\x1b' or ch2 == '^]':
-            self.aborted = True
-            clear_console()
-            return False
+        elif ch2 == ':':    # Menu for user to use during the game
+            command = input(":")
+            if command == "exit":
+                self.aborted = True
+                clear_console()
+                return False
+            elif command == "help":
+                print("Commands you can use:"
+                      "\n\thelp\t- prints list of all commands"
+                      "\n\tscore\t- prints your score"
+                      "\n\texit\t- exits the game")
+            elif command == "score":
+                print("This is your score, whatever...")
+            else:
+                print("Sorry, not a valid command. Try inputing :help for list of commands")
+
+        else:
+            print("Sorry, not a valid input. Move with arrows and enter commands with \":\"")
 
         return False
 
@@ -109,6 +122,5 @@ class Hero:
         while maze[self._coordY][self._coordX] != 0:
             self._coordX = random.randint(1, len(maze[self._coordY]) - 2)
 
-        print(maze[self._coordY][self._coordX])
         maze[self._coordY][self._coordX] = 2
         return maze

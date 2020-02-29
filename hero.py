@@ -115,12 +115,30 @@ class Hero:
         """fight with monsters"""
         return
 
-    def spawn(self, maze):
+    # def spawn(self, maze):
+    #  Shorter but not infinite loop proof
+    #     self._coordY = random.randint(1, len(maze) - 2)
+    #     self._coordX = random.randint(1, len(maze[self._coordY]) - 2)
+    #
+    #     while maze[self._coordY][self._coordX] != 0:
+    #         self._coordX = random.randint(1, len(maze[self._coordY]) - 2)
+    #
+    #     maze[self._coordY][self._coordX] = 2
+    #     return maze
+
+    def spawn(self, maze):  # Adding Goblins and Monsters to the maze recursively
         self._coordY = random.randint(1, len(maze) - 2)
         self._coordX = random.randint(1, len(maze[self._coordY]) - 2)
-
         while maze[self._coordY][self._coordX] != 0:
-            self._coordX = random.randint(1, len(maze[self._coordY]) - 2)
-
-        maze[self._coordY][self._coordX] = 2
+            # Continue as long as don't find a 0 in the maze
+            # I found this to be the most efficient way to ensure that there won't be an infinite loop
+            list_row = random.sample(range(1, len(maze) - 1), len(maze) - 2)  # Generate a list of unique random numbers for the row
+            list_col = random.sample(range(1, len(maze[self._coordY]) - 1), len(maze[self._coordY]) - 2)  # Generate a list of unique random numbers for the col
+            for y in list_row:
+                for x in list_col:
+                    if maze[y][x] == 0:
+                        self._coordX = x
+                        self._coordY = y
+                        maze[self._coordY][self._coordX] = 2
+                        return maze
         return maze

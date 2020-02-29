@@ -1,10 +1,10 @@
-# This code is based on http://arcade.academy/examples/maze_recursive.html
+# This code is basn http://arcade.academy/examples/maze_recursive.html
 #
 # Modified by CS1527 Course Team on 30 January 2019
 #
 #
 
-import random
+import random, time
 
 
 SCREEN_WIDTH = 1000
@@ -126,13 +126,24 @@ def print_maze(maze, wall="#", space="-", hero="H", goblin="G", monster="M"):
 
 def add_goblin_monster(maze):  # Adding Goblins and Monsters to the maze recursively
     counter = 0
-
     while counter != 10:
         rand_row = random.randint(1, len(maze) - 2)
         rand_col = random.randint(1, len(maze[rand_row]) - 2)
 
         while maze[rand_row][rand_col] != 0:
-            rand_col = random.randint(1, len(maze[rand_row]) - 2)
+            # Continue as long as don't find a 0 in the maze
+            # I found this to be the most efficient way to ensure that there won't be an infinite loop
+            list_row = random.sample(range(1, len(maze) - 1), len(maze) - 2)  # Generate a list of unique random numbers for the row
+            list_col = random.sample(range(1, len(maze[rand_row]) - 1), len(maze[rand_row]) - 2)    # Generate a list of unique random numbers for the col
+            try:    # using error catching because I need to break two for loops at the same time
+                for y in list_row:
+                    for x in list_col:
+                        if maze[y][x] == 0:
+                            rand_col = x
+                            rand_row = y
+                            raise IndexError    # again raising exception just to break out of loop
+            except IndexError:
+                continue
 
         if counter < 5:
             maze[rand_row][rand_col] = 3    # Adding Goblins
@@ -140,7 +151,6 @@ def add_goblin_monster(maze):  # Adding Goblins and Monsters to the maze recursi
             maze[rand_row][rand_col] = 4    # Adding Monsters
 
         counter += 1
-
 
 
 if __name__ == "__main__":

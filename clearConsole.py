@@ -3,12 +3,13 @@ from sys import platform as _platform
 
 
 def clear_console():
-    if _platform == "linux" or _platform == "darwin":
+    if _platform == "linux" or _platform == "linux2" or _platform == "darwin":
         os.system("clear")
     elif _platform == "win32" or _platform == "win64":
         os.system("cls")
     else:
-        "Your platform is unfortunatelly not supported, see clearConsole.py"
+        print("Your platform is unfortunatelly not supported, see clearConsole.py")
 
 
-clear_console()
+if __name__ == "__main__":
+    clear_console()

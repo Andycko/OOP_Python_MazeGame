@@ -111,23 +111,41 @@ def make_maze_recursion(maze_width, maze_height):
 
     # Start the recursive process
     make_maze_recursive_call(maze, maze_height - 1, 0, 0, maze_width - 1)
+    add_goblin_monster(maze)
     return maze
 
 
-def print_maze(maze, wall="#", space="-"):
+def print_maze(maze, wall="#", space="-", hero="H", goblin="G", monster="M"):
     """print out the maze in the terminal"""
     for row in maze:
         row_str = str(row)
-        row_str = row_str.replace("1", wall)  # replace the wall character
-        row_str = row_str.replace("0", space)  # replace the space character
+        row_str = row_str.replace("1", wall)    # replace the wall character
+        row_str = row_str.replace("0", space)   # replace the space character
         print("".join(row_str))
 
-def print_maze_hero_monster():
-    return
+
+def add_goblin_monster(maze):  # Adding Goblins and Monsters to the maze recursively
+    counter = 0
+
+    while counter != 10:
+        rand_row = random.randint(1, len(maze) - 2)
+        rand_col = random.randint(1, len(maze[rand_row]) - 2)
+
+        while maze[rand_row][rand_col] != 0:
+            rand_col = random.randint(1, len(maze[rand_row]) - 2)
+
+        if counter < 5:
+            maze[rand_row][rand_col] = 3    # Adding Goblins
+        else:
+            maze[rand_row][rand_col] = 4    # Adding Monsters
+
+        counter += 1
+
+
 
 if __name__ == "__main__":
-    maze=make_maze_recursion(7, 7)
-    print_maze(maze, "#", "-")
+    maze = make_maze_recursion(7, 7)
+    print_maze(maze)
     print(maze,"#", "-")
     print(maze[2][1])
     print(maze[1][2])

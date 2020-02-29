@@ -5,6 +5,8 @@ from copy import deepcopy
 WALL_CHAR = "#"
 SPACE_CHAR = "-"
 HERO_CHAR = "H"
+GOBLIN_CHAR = "G"
+MONSTER_CHAR = "M"
 
 
 class _Environment:
@@ -25,6 +27,8 @@ class _Environment:
             row_str = row_str.replace("1", WALL_CHAR)  # replace the wall character
             row_str = row_str.replace("0", SPACE_CHAR)  # replace the space character
             row_str = row_str.replace("2", HERO_CHAR)  # replace the hero character
+            row_str = row_str.replace("3", GOBLIN_CHAR)  # replace the hero character
+            row_str = row_str.replace("4", MONSTER_CHAR)  # replace the hero character
 
             print("".join(row_str))
 
@@ -35,15 +39,19 @@ class Game:
 
     def __init__(self):
         self.myHero = Hero()
-        self.maze = make_maze_recursion(7, 7)
+        self.maze = make_maze_recursion(10, 10)
+        self.maze = self.myHero.spawn(self.maze)    # Spawning hero, returning maze with the hero in it
         self.MyEnvironment = _Environment(self.maze)  # initial environment is the maze itself
         self._count = 0
 
     def play(self):
-        while self.myHero._aborted == False:
+        self.myHero.health(show=True)
+        self.MyEnvironment.print_environment()
+        print("============================", self._count)
+        while not self.myHero.aborted:
 
+            # if self.myHero.move_debug(self.MyEnvironment):  #this works in debug mode
             if self.myHero.move(self.MyEnvironment):
-            #if self.myHero.move_debug(self.MyEnvironment):  #this works in debug mode
                 self.MyEnvironment.print_environment()
                 self._count += 1
                 print("============================", self._count)
@@ -53,4 +61,3 @@ if __name__ == "__main__":
 
     myGame = Game()
     myGame.play()
-    

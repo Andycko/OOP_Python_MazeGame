@@ -3,7 +3,8 @@
 #  Version: 1.0
 
 from getch1 import *
-from clearConsole import clear_console
+from monster import FighterMonster
+from helpers import clear_console
 import sys, random
 
 
@@ -11,13 +12,24 @@ class Hero:
     """this is the hero class, further define it please"""
     def __init__(self):
         """set the coordinate of the hero in the maze"""
-
         self._coordX = 2
         self._coordY = 2
         self._health = 100
         self._coins = 1000  # gold coins the hero have.
         self._gem = 3
         self.aborted = False
+
+    def get_health(self):
+        return self._health
+
+    def get_coins(self):
+        return self._coins
+
+    def set_coins(self, value):
+        self._coins = value
+
+    def set_health(self, value):
+        self._health = value
 
     def health(self, show=False):
         if show:
@@ -32,7 +44,7 @@ class Hero:
             self.aborted = True
             return False
 
-    def check_path(self, environment, direction):
+    def check_path(self, environment, direction, monsters=None, goblins=None):
         if direction == "top":
             x = 0
             y = -1
@@ -51,18 +63,42 @@ class Hero:
 
         if environment.get_coord(self._coordY + y, self._coordX + x) == 0:
             return True
+        elif environment.get_coord(self._coordY + y, self._coordX + x) == 4:
+            monster = self.identify_creature(self._coordX + x, self._coordY + y, monsters)
+            if type(monster).__name__ == "FighterMonster":
+                monster.fight(self)
+                return True
+            elif type(monster).__name__ == "ThiefMonster":
+                monster.steal(self)
+                return True
+            else:
+                monster.play(self)
+                return True
         else:
             return False
 
-    def move(self, environment):
+    def identify_creature(self, coord_x, coord_y, monsters=None, goblins=None):
+        if monsters:
+            for monster in monsters:
+                x, y = monster.get_coordinates()
+                if (coord_x == x) and (coord_y == y):
+                    return monster
+        else:
+            for goblin in goblins:
+                x, y = goblin.get_coordinates()
+                if (coord_x == x) and (coord_y == y):
+                    return goblin
+        pass
+
+    def move(self, environment, monsters, goblins):
         """move in the maze, it is noted this function may not work in the debug mode"""
         ch2 = getch()
 
         if ch2 == b'H' or ch2 == "A":
             # the up arrow key was pressed
             clear_console()
-            print("up key pressed")
-            if self.check_path(environment, "top"):
+            print("up key pressed - ", end="")
+            if self.check_path(environment, "top", monsters):
                 environment.set_coord(self._coordY, self._coordX, 0)
                 self._coordY -= 1
                 environment.set_coord(self._coordY, self._coordX, 2)
@@ -75,8 +111,8 @@ class Hero:
         elif ch2 == b'P' or ch2 == "B":
             # the down arrow key was pressed
             clear_console()
-            print("down key pressed")
-            if self.check_path(environment, "bottom"):
+            print("down key pressed - ", end="")
+            if self.check_path(environment, "bottom", monsters):
                 environment.set_coord(self._coordY, self._coordX, 0)
                 self._coordY += 1
                 environment.set_coord(self._coordY, self._coordX, 2)
@@ -89,8 +125,8 @@ class Hero:
         elif ch2 == b'K' or ch2 == "D":
             # the left arrow key was pressed
             clear_console()
-            print("left key pressed")
-            if self.check_path(environment, "left"):
+            print("left key pressed - ", end="")
+            if self.check_path(environment, "left", monsters):
                 environment.set_coord(self._coordY, self._coordX, 0)
                 self._coordX -= 1
                 environment.set_coord(self._coordY, self._coordX, 2)
@@ -103,8 +139,8 @@ class Hero:
         elif ch2 == b'M' or ch2 == "C":
             # the right arrow key was pressed
             clear_console()
-            print("right key pressed")
-            if self.check_path(environment, "right"):
+            print("right key pressed - ", end="")
+            if self.check_path(environment, "right", monsters):
                 environment.set_coord(self._coordY, self._coordX, 0)
                 self._coordX += 1
                 environment.set_coord(self._coordY, self._coordX, 2)

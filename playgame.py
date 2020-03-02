@@ -39,7 +39,8 @@ class Game:
 
     def __init__(self):
         self.myHero = Hero()
-        self.maze = make_maze_recursion(17, 17)
+        self.monsters, self.goblins, self.maze = make_maze_recursion(10, 10)
+        # self.maze = make_maze_recursion(10, 10)
         self.maze = self.myHero.spawn(self.maze)    # Spawning hero, returning maze with the hero in it
         self.MyEnvironment = _Environment(self.maze)  # initial environment is the maze itself
         self._count = 0
@@ -51,7 +52,7 @@ class Game:
 
         while not self.myHero.aborted:  # Checking if player has not aborted the game with :exit command or died
             # if self.myHero.move_debug(self.MyEnvironment):  #this works in debug mode
-            if self.myHero.move(self.MyEnvironment):
+            if self.myHero.move(self.MyEnvironment, self.monsters, self.goblins):
                 self.MyEnvironment.print_environment()
                 self._count += 1
                 print("============================", self._count)

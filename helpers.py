@@ -13,6 +13,7 @@ def clear_console():
 
 
 def rock_paper_scissors():
+    # TODO: Validate input
     print("You are playing a game of rock-paper-scissors!")
     bot = random.randint(1,3)
     player = input("Please input your choice in a form of number ranging from 1 to 3: ")

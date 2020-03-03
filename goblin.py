@@ -16,8 +16,11 @@ class Goblin:
     def get_coordinates(self):
         return self._coordX, self._coordY
 
-    def __del__(self):
-        print("ahoj")
+    # def __del__(self):
+    # this does not work for some reason
+    #     Goblin.all_goblins.remove(self)
+
+    def destroy(self):
         Goblin.all_goblins.remove(self)
 
 

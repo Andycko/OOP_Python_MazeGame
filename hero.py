@@ -86,15 +86,15 @@ class Hero:
             goblin = self.identify_creature(self._coordX + x, self._coordY + y, goblin=True)
             if type(goblin).__name__ == "WealthGoblin":
                 goblin.give_coin(self)
-                del goblin
+                goblin.destroy()
                 return True
             elif type(goblin).__name__ == "HealthGoblin":
                 goblin.give_health(self)
-                del goblin
+                goblin.destroy()
                 return True
             else:
                 goblin.play(self)
-                del goblin
+                goblin.destroy()
                 return True
 
         else:

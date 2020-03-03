@@ -6,15 +6,19 @@ from helpers import rock_paper_scissors
 
 
 class Goblin:
+    all_goblins = []
+
     def __init__(self, coord_x, coord_y):
         self._coordX = coord_x
         self._coordY = coord_y
+        Goblin.all_goblins.append(self)
 
     def get_coordinates(self):
         return self._coordX, self._coordY
 
-    def disappear(self):
-        return False
+    def __del__(self):
+        print("ahoj")
+        Goblin.all_goblins.remove(self)
 
 
 class WealthGoblin(Goblin):

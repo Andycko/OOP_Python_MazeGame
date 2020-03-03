@@ -6,6 +6,8 @@ from getch1 import *
 from monster import FighterMonster
 from helpers import clear_console
 import sys, random
+from monster import Monster
+from goblin import Goblin
 
 
 class Hero:
@@ -31,6 +33,8 @@ class Hero:
     def set_health(self, value):
         if value <= 100:
             self._health = value
+        elif value <= 0:
+            self._health = 0
         else:
             self._health = 100
 
@@ -47,7 +51,7 @@ class Hero:
             self.aborted = True
             return False
 
-    def check_path(self, environment, direction, monsters=None, goblins=None):
+    def check_path(self, environment, direction):
         if direction == "top":
             x = 0
             y = -1
@@ -67,8 +71,7 @@ class Hero:
         if environment.get_coord(self._coordY + y, self._coordX + x) == 0:
             return True
         elif environment.get_coord(self._coordY + y, self._coordX + x) == 4:
-            monster = self.identify_creature(self._coordX + x, self._coordY + y, monsters)
-            # TODO: Think about monster counter, should it not live in the monster class?
+            monster = self.identify_creature(self._coordX + x, self._coordY + y, monster=True)
             if type(monster).__name__ == "FighterMonster":
                 monster.fight(self)
                 return True
@@ -80,37 +83,38 @@ class Hero:
                 return True
 
         elif environment.get_coord(self._coordY + y, self._coordX + x) == 3:
-            goblin = self.identify_creature(self._coordX + x, self._coordY + y, goblins)
+            goblin = self.identify_creature(self._coordX + x, self._coordY + y, goblin=True)
             if type(goblin).__name__ == "WealthGoblin":
                 goblin.give_coin(self)
-                goblins.remove(goblin)
+                del goblin
                 return True
             elif type(goblin).__name__ == "HealthGoblin":
                 goblin.give_health(self)
-                goblins.remove(goblin)
+                del goblin
                 return True
             else:
                 goblin.play(self)
-                goblins.remove(goblin)
+                del goblin
                 return True
 
         else:
             return False
 
-    def identify_creature(self, coord_x, coord_y, monsters=None, goblins=None):
-        if monsters:
-            for monster in monsters:
+    def identify_creature(self, coord_x, coord_y, monster=False, goblin=False):
+        if monster:
+            for monster in Monster.all_monsters:
                 x, y = monster.get_coordinates()
                 if (coord_x == x) and (coord_y == y):
                     return monster
-        else:
-            for goblin in goblins:
+        elif goblin:
+            for goblin in Goblin.all_goblins:
                 x, y = goblin.get_coordinates()
                 if (coord_x == x) and (coord_y == y):
                     return goblin
-        pass
+        else:
+            print("Need to be a monster or a goblin")
 
-    def move(self, environment, monsters, goblins):
+    def move(self, environment):
         """move in the maze, it is noted this function may not work in the debug mode"""
         ch2 = getch()
 
@@ -118,7 +122,7 @@ class Hero:
             # the up arrow key was pressed
             clear_console()
             print("up key pressed - ", end="")
-            if self.check_path(environment, "top", monsters, goblins):
+            if self.check_path(environment, "top"):
                 environment.set_coord(self._coordY, self._coordX, 0)
                 self._coordY -= 1
                 environment.set_coord(self._coordY, self._coordX, 2)
@@ -132,7 +136,7 @@ class Hero:
             # the down arrow key was pressed
             clear_console()
             print("down key pressed - ", end="")
-            if self.check_path(environment, "bottom", monsters, goblins):
+            if self.check_path(environment, "bottom"):
                 environment.set_coord(self._coordY, self._coordX, 0)
                 self._coordY += 1
                 environment.set_coord(self._coordY, self._coordX, 2)
@@ -146,7 +150,7 @@ class Hero:
             # the left arrow key was pressed
             clear_console()
             print("left key pressed - ", end="")
-            if self.check_path(environment, "left", monsters, goblins):
+            if self.check_path(environment, "left"):
                 environment.set_coord(self._coordY, self._coordX, 0)
                 self._coordX -= 1
                 environment.set_coord(self._coordY, self._coordX, 2)
@@ -160,7 +164,7 @@ class Hero:
             # the right arrow key was pressed
             clear_console()
             print("right key pressed - ", end="")
-            if self.check_path(environment, "right", monsters, goblins):
+            if self.check_path(environment, "right"):
                 environment.set_coord(self._coordY, self._coordX, 0)
                 self._coordX += 1
                 environment.set_coord(self._coordY, self._coordX, 2)

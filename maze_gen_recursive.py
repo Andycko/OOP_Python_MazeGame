@@ -128,8 +128,6 @@ def print_maze(maze, wall="#", space="-", hero="H", goblin="G", monster="M"):
 
 def add_goblin_monster(maze):  # Adding Goblins and Monsters to the maze recursively
     counter = 0
-    monsters = []
-    goblins = []
 
     while counter != 10:
         rand_row = random.randint(1, len(maze) - 2)
@@ -153,28 +151,28 @@ def add_goblin_monster(maze):  # Adding Goblins and Monsters to the maze recursi
         if counter < 5:
             creature_type = random.randint(1, 3)
             if creature_type == 1:
-                monsters.append(FighterMonster(rand_col, rand_row))
+                FighterMonster(rand_col, rand_row)
             elif creature_type == 2:
-                monsters.append(ThiefMonster(rand_col, rand_row))
+                ThiefMonster(rand_col, rand_row)
             else:
-                monsters.append(GamerMonster(rand_col, rand_row))
+                GamerMonster(rand_col, rand_row)
                 
             maze[rand_row][rand_col] = 4    # Adding Monsters
         else:
             creature_type = random.randint(1, 3)
             if creature_type == 1:
-                goblins.append(WealthGoblin(rand_col, rand_row))
+                WealthGoblin(rand_col, rand_row)
             elif creature_type == 2:
-                goblins.append(HealthGoblin(rand_col, rand_row))
+                HealthGoblin(rand_col, rand_row)
             else:
-                goblins.append(GamerGoblin(rand_col, rand_row))
+                GamerGoblin(rand_col, rand_row)
 
             maze[rand_row][rand_col] = 3    # Adding Goblins
 
         counter += 1
 
-    return monsters, goblins, maze
-
+    # return monsters, goblins, maze
+    return maze
 
 if __name__ == "__main__":
     maze = make_maze_recursion(7, 7)

@@ -8,9 +8,12 @@ from helpers import rock_paper_scissors
 
 class Monster:
     """define your monster class here"""
+    all_monsters = []
+
     def __init__(self, coord_x, coord_y):
         self._coordX = coord_x
         self._coordY = coord_y
+        Monster.all_monsters.append(self)
 
     def get_coordinates(self):
         return self._coordX, self._coordY

@@ -29,7 +29,10 @@ class Hero:
         self._coins = value
 
     def set_health(self, value):
-        self._health = value
+        if value <= 100:
+            self._health = value
+        else:
+            self._health = 100
 
     def health(self, show=False):
         if show:
@@ -65,6 +68,7 @@ class Hero:
             return True
         elif environment.get_coord(self._coordY + y, self._coordX + x) == 4:
             monster = self.identify_creature(self._coordX + x, self._coordY + y, monsters)
+            # TODO: Think about monster counter, should it not live in the monster class?
             if type(monster).__name__ == "FighterMonster":
                 monster.fight(self)
                 return True
@@ -74,6 +78,22 @@ class Hero:
             else:
                 monster.play(self)
                 return True
+
+        elif environment.get_coord(self._coordY + y, self._coordX + x) == 3:
+            goblin = self.identify_creature(self._coordX + x, self._coordY + y, goblins)
+            if type(goblin).__name__ == "WealthGoblin":
+                goblin.give_coin(self)
+                goblins.remove(goblin)
+                return True
+            elif type(goblin).__name__ == "HealthGoblin":
+                goblin.give_health(self)
+                goblins.remove(goblin)
+                return True
+            else:
+                goblin.play(self)
+                goblins.remove(goblin)
+                return True
+
         else:
             return False
 
@@ -98,7 +118,7 @@ class Hero:
             # the up arrow key was pressed
             clear_console()
             print("up key pressed - ", end="")
-            if self.check_path(environment, "top", monsters):
+            if self.check_path(environment, "top", monsters, goblins):
                 environment.set_coord(self._coordY, self._coordX, 0)
                 self._coordY -= 1
                 environment.set_coord(self._coordY, self._coordX, 2)
@@ -112,7 +132,7 @@ class Hero:
             # the down arrow key was pressed
             clear_console()
             print("down key pressed - ", end="")
-            if self.check_path(environment, "bottom", monsters):
+            if self.check_path(environment, "bottom", monsters, goblins):
                 environment.set_coord(self._coordY, self._coordX, 0)
                 self._coordY += 1
                 environment.set_coord(self._coordY, self._coordX, 2)
@@ -126,7 +146,7 @@ class Hero:
             # the left arrow key was pressed
             clear_console()
             print("left key pressed - ", end="")
-            if self.check_path(environment, "left", monsters):
+            if self.check_path(environment, "left", monsters, goblins):
                 environment.set_coord(self._coordY, self._coordX, 0)
                 self._coordX -= 1
                 environment.set_coord(self._coordY, self._coordX, 2)
@@ -140,7 +160,7 @@ class Hero:
             # the right arrow key was pressed
             clear_console()
             print("right key pressed - ", end="")
-            if self.check_path(environment, "right", monsters):
+            if self.check_path(environment, "right", monsters, goblins):
                 environment.set_coord(self._coordY, self._coordX, 0)
                 self._coordX += 1
                 environment.set_coord(self._coordY, self._coordX, 2)

@@ -15,9 +15,6 @@ class Monster:
     def get_coordinates(self):
         return self._coordX, self._coordY
 
-    def disappear(self):
-        return False
-
 
 class FighterMonster(Monster):
     def __init__(self, coord_x, coord_y):
@@ -30,10 +27,8 @@ class FighterMonster(Monster):
         if random.randint(1, 100) in probability_list:   # random number N = <1;100> check if is in probability_list
             hero.set_health(hero.get_health() - self._damage)
             print("You have suffered", self._damage, "damage, your life is now", hero.get_health())
-            self.disappear()
         else:
             print("You are lucky, the monster did not hit you and you can continue")
-            self.disappear()
 
 
 class ThiefMonster(Monster):
@@ -47,10 +42,8 @@ class ThiefMonster(Monster):
         if random.randint(1, 100) in probability_list:   # random number N = <1;100> check if is in probability_list
             hero.set_coins(hero.get_coins() - self._steal)
             print("You have lost", self._steal, "coins, you have", hero.get_coins(), "coins")
-            self.disappear()
         else:
             print("You are lucky, the monster did not steal anything from you and you can continue")
-            self.disappear()
 
 
 class GamerMonster(Monster):
@@ -66,4 +59,3 @@ class GamerMonster(Monster):
             print("You have lost", self._steal, "coins and", self._damage, "health, you have", hero.get_coins(), "coins and", hero.get_health(), "health")
         else:
             print("You defeated the monster, you may continue your journey.")
-            self.disappear()

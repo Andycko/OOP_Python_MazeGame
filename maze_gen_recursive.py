@@ -6,7 +6,7 @@
 
 import random
 from monster import FighterMonster, ThiefMonster, GamerMonster
-# from goblin import WealthGoblin, HealthGoblin, GamerGoblin
+from goblin import WealthGoblin, HealthGoblin, GamerGoblin
 
 
 SCREEN_WIDTH = 1000
@@ -161,13 +161,13 @@ def add_goblin_monster(maze):  # Adding Goblins and Monsters to the maze recursi
                 
             maze[rand_row][rand_col] = 4    # Adding Monsters
         else:
-            # creature_type = random.randint(1, 3)
-            # if creature_type == 1:
-            #     goblins.append(WealthGoblin(rand_col, rand_row))
-            # elif creature_type == 2:
-            #     goblins.append(HealthGoblin(rand_col, rand_row))
-            # else:
-            #     goblins.append(GamerGoblin(rand_col, rand_row))
+            creature_type = random.randint(1, 3)
+            if creature_type == 1:
+                goblins.append(WealthGoblin(rand_col, rand_row))
+            elif creature_type == 2:
+                goblins.append(HealthGoblin(rand_col, rand_row))
+            else:
+                goblins.append(GamerGoblin(rand_col, rand_row))
 
             maze[rand_row][rand_col] = 3    # Adding Goblins
 

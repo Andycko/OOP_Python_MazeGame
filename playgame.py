@@ -39,7 +39,7 @@ class Game:
 
     def __init__(self):
         self.myHero = Hero()
-        self.monsters, self.goblins, self.maze = make_maze_recursion(10, 10)
+        self.monsters, self.goblins, self.maze = make_maze_recursion(20, 20)
         # self.maze = make_maze_recursion(10, 10)
         self.maze = self.myHero.spawn(self.maze)    # Spawning hero, returning maze with the hero in it
         self.MyEnvironment = _Environment(self.maze)  # initial environment is the maze itself

@@ -116,11 +116,14 @@ class Hero:
 
     def move(self, environment):
         """move in the maze, it is noted this function may not work in the debug mode"""
-        # TODO: DOES NOT WORK ON WINDOWS...
         ch = getch()
-        if ch == '\033':    # Added this if statement to differentiate between command input and arrow input
-                            # as when using getch with arrow keys you get three inputs instead of one -> '\033', '[', <KEY CODE>
-            getch()
+        if ch == '\033' or ch == b'\xe0':
+            # Added this if statement to differentiate between command input and arrow input
+            # as when using getch with arrow keys you get three inputs instead of one -> '\033', '[', <KEY CODE>
+
+            if ch == '\033':    # I figured this is required on Unix
+                getch()
+                
             ch2 = getch()
             if ch2 == b'H' or ch2 == "A":
                 # the up arrow key was pressed
@@ -179,7 +182,7 @@ class Hero:
                     return True
         else:
             # Menu for user to use during the game
-            if ch == ':':    # Using getch input saved in ch, as I have already done that in the parent if statement
+            if ch == b':' or ch == ":":    # Using getch input saved in ch, as I have already done that in the parent if statement
                 command = input(":")
                 if command == "exit":
                     self.aborted = True
@@ -197,7 +200,7 @@ class Hero:
 
             else:
                 print("Sorry, not a valid input. Move with arrows and enter commands with \":\"")
-                pass
+
         return False
 
     def move_debug(self, environment):

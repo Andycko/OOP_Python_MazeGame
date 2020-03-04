@@ -2,8 +2,8 @@ from hero import Hero
 from maze_gen_recursive import make_maze_recursion
 from copy import deepcopy
 
-WALL_CHAR = "#"
-SPACE_CHAR = "-"
+WALL_CHAR = "■"
+SPACE_CHAR = " "
 HERO_CHAR = "H"
 GOBLIN_CHAR = "G"
 MONSTER_CHAR = "M"
@@ -30,7 +30,7 @@ class _Environment:
             row_str = row_str.replace("3", GOBLIN_CHAR)  # replace the hero character
             row_str = row_str.replace("4", MONSTER_CHAR)  # replace the hero character
 
-            print("".join(row_str))
+            print("".join(row_str)[1:-1].replace(",", ""))
 
 
 class Game:
@@ -40,7 +40,7 @@ class Game:
     def __init__(self):
         self.myHero = Hero()
         # self.monsters, self.goblins, self.maze = make_maze_recursion(20, 20)
-        self.maze = make_maze_recursion(15, 15)
+        self.maze = make_maze_recursion(20, 20)
         self.maze = self.myHero.spawn(self.maze)    # Spawning hero, returning maze with the hero in it
         self.MyEnvironment = _Environment(self.maze)  # initial environment is the maze itself
         self._count = 0

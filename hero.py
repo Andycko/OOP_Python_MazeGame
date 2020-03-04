@@ -31,7 +31,7 @@ class Hero:
         self._coins = value
 
     def set_health(self, value):
-        if value <= 100:
+        if 100 >= value > 0:
             self._health = value
         elif value <= 0:
             self._health = 0
@@ -46,8 +46,8 @@ class Hero:
             print("Your health is", self._health)
             return True
         else:
-            self._health -= 1
-            print("Your health has dropped to 0, you die now...")
+            self._health = 0
+            print("Your health has dropped to", self._health, ", you die now...")
             self.aborted = True
             return False
 
@@ -116,6 +116,7 @@ class Hero:
 
     def move(self, environment):
         """move in the maze, it is noted this function may not work in the debug mode"""
+        # TODO: DOES NOT WORK ON WINDOWS...
         ch = getch()
         if ch == '\033':    # Added this if statement to differentiate between command input and arrow input
                             # as when using getch with arrow keys you get three inputs instead of one -> '\033', '[', <KEY CODE>
@@ -200,7 +201,6 @@ class Hero:
         return False
 
     def move_debug(self, environment):
-
         """move in the maze, you need to press the enter key after keying in
         direction, and this works in the debug mode"""
 

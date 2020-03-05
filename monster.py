@@ -3,6 +3,7 @@
 #  Version: 1.0
 
 import random
+
 from helpers import rock_paper_scissors
 
 
@@ -26,8 +27,8 @@ class FighterMonster(Monster):
         self._probability = round((100 - self._damage) * random.uniform(0.6, 1.2))
 
     def fight(self, hero):
-        probability_list = range(1, self._probability + 1)    # list of numbers stating the probability
-        if random.randint(1, 100) in probability_list:   # random number N = <1;100> check if is in probability_list
+        probability_list = range(1, self._probability + 1)  # list of numbers stating the probability
+        if random.randint(1, 100) in probability_list:  # random number N = <1;100> check if is in probability_list
             hero.set_health(hero.get_health() - self._damage)
             print("You have suffered", self._damage, "damage, your life is now", hero.get_health())
         else:
@@ -41,8 +42,8 @@ class ThiefMonster(Monster):
         self._probability = round(((500 - self._steal) * random.uniform(0.6, 1.2)) / 5)
 
     def steal(self, hero):
-        probability_list = range(1, self._probability + 1)    # list of numbers stating the probability
-        if random.randint(1, 100) in probability_list:   # random number N = <1;100> check if is in probability_list
+        probability_list = range(1, self._probability + 1)  # list of numbers stating the probability
+        if random.randint(1, 100) in probability_list:  # random number N = <1;100> check if is in probability_list
             hero.set_coins(hero.get_coins() - self._steal)
             print("You have lost", self._steal, "coins, you have", hero.get_coins(), "coins")
         else:
@@ -59,6 +60,7 @@ class GamerMonster(Monster):
         if rock_paper_scissors():
             hero.set_coins(hero.get_coins() - self._steal)
             hero.set_health(hero.get_health() - self._damage)
-            print("You have lost", self._steal, "coins and", self._damage, "health, you have", hero.get_coins(), "coins and", hero.get_health(), "health")
+            print("You have lost", self._steal, "coins and", self._damage, "health, you have", hero.get_coins(),
+                  "coins and", hero.get_health(), "health")
         else:
             print("You defeated the monster, you may continue your journey.")

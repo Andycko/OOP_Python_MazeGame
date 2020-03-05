@@ -2,6 +2,7 @@
 #  Date: 9 January 2020
 #  Version: 1.0
 import random
+
 from helpers import rock_paper_scissors
 
 
@@ -31,8 +32,8 @@ class WealthGoblin(Goblin):
         self._probability = round(((400 - self._coins) * random.uniform(0.6, 1.2)) / 4)
 
     def give_coin(self, hero):
-        probability_list = range(1, self._probability + 1)    # list of numbers stating the probability
-        if random.randint(1, 100) in probability_list:   # random number N = <1;100> check if is in probability_list
+        probability_list = range(1, self._probability + 1)  # list of numbers stating the probability
+        if random.randint(1, 100) in probability_list:  # random number N = <1;100> check if is in probability_list
             hero.set_coins(hero.get_coins() + self._coins)
             print("You have received", self._coins, "coins, your have now", hero.get_coins(), "coins")
         else:
@@ -42,12 +43,12 @@ class WealthGoblin(Goblin):
 class HealthGoblin(Goblin):
     def __init__(self, coord_x, coord_y):
         super(HealthGoblin, self).__init__(coord_x, coord_y)
-        self._health = random.randint(1,50)
+        self._health = random.randint(1, 50)
         self._probability = round((100 - self._health) * random.uniform(0.6, 1.2))
 
     def give_health(self, hero):
-        probability_list = range(1, self._probability + 1)    # list of numbers stating the probability
-        if random.randint(1, 100) in probability_list:   # random number N = <1;100> check if is in probability_list
+        probability_list = range(1, self._probability + 1)  # list of numbers stating the probability
+        if random.randint(1, 100) in probability_list:  # random number N = <1;100> check if is in probability_list
             hero.set_health(hero.get_health() + self._health)
             print("The goblin has healed by", self._health, "health, your have now", hero.get_health(), "health")
         else:
@@ -66,4 +67,5 @@ class GamerGoblin(Goblin):
         else:
             hero.set_coins(hero.get_coins() + self._coins)
             hero.set_health(hero.get_health() + self._health)
-            print("You received", self._coins, "coins and", self._health, "health, you have", hero.get_coins(), "coins and", hero.get_health(), "health")
+            print("You received", self._coins, "coins and", self._health, "health, you have", hero.get_coins(),
+                  "coins and", hero.get_health(), "health")

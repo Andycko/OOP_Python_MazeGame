@@ -9,13 +9,13 @@ def clear_console():
     elif _platform == "win32" or _platform == "win64":
         os.system("cls")
     else:
-        print("Your platform is unfortunatelly not supported, see helpers.py")
+        print("Your platform is unfortunately not supported, see helpers.py")
 
 
 def rock_paper_scissors():
     # TODO: Validate input
     print("You are playing a game of rock-paper-scissors!")
-    bot = random.randint(1,3)
+    bot = random.randint(1, 3)
     player = input("Please input your choice in a form of number ranging from 1 to 3: ")
 
     if bot == player:

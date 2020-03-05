@@ -2,16 +2,18 @@
 #  Date: 9 January 2020
 #  Version: 1.0
 
+import random
+import sys
+
 from getch1 import *
-from monster import FighterMonster
-from helpers import clear_console
-import sys, random
-from monster import Monster
 from goblin import Goblin
+from helpers import clear_console
+from monster import Monster
 
 
 class Hero:
     """this is the hero class, further define it please"""
+
     def __init__(self):
         """set the coordinate of the hero in the maze"""
         self._coordX = 2
@@ -119,12 +121,7 @@ class Hero:
 
     def move(self, environment, character):
         """move in the maze, it is noted this function may not work in the debug mode"""
-        # ch = getch()
-        # if ch == '\033' or ch == b'\xe0':
-            # Added this if statement to differentiate between command input and arrow input
-            # as when using getch with arrow keys you get three inputs instead of one -> '\033', '[', <KEY CODE>
-
-        if character == '\033':    # I figured this is required on Unix
+        if character == '\033':  # I figured this is required on Unix because after the escape char there is also a "["
             getch()
 
         ch2 = getch()
@@ -180,26 +177,6 @@ class Hero:
                 print("Not a valid move")
                 self.health(show=True)
                 return True
-        # else:
-            # Menu for user to use during the game
-            # if ch == b':' or ch == ":":    # Using getch input saved in ch, as I have already done that in the parent if statement
-            #     command = input(":")
-            #     if command == "exit":
-            #         self.aborted = True
-            #         clear_console()
-            #         return False
-            #     elif command == "help":
-            #         print("Commands you can use:"
-            #               "\n\thelp\t- prints list of all commands"
-            #               "\n\tscore\t- prints your score"
-            #               "\n\texit\t- exits the game")
-            #     elif command == "score":
-            #         print("This is your score, whatever...")
-            #     else:
-            #         print("Sorry, not a valid command. Try inputting :help for list of commands")
-            #
-            # else:
-            #     print("Sorry, not a valid input. Move with arrows and enter commands with \":\"")
 
         return False
 
@@ -212,7 +189,7 @@ class Hero:
         if ch2 == "w":
             # the up arrow key was pressed
             print("up key pressed")
-            
+
             return True
 
         elif ch2 == "s":
@@ -236,25 +213,16 @@ class Hero:
         """fight with monsters"""
         return
 
-    # def spawn(self, maze):
-    #  Shorter but not infinite loop proof
-    #     self._coordY = random.randint(1, len(maze) - 2)
-    #     self._coordX = random.randint(1, len(maze[self._coordY]) - 2)
-    #
-    #     while maze[self._coordY][self._coordX] != 0:
-    #         self._coordX = random.randint(1, len(maze[self._coordY]) - 2)
-    #
-    #     maze[self._coordY][self._coordX] = 2
-    #     return maze
-
     def spawn(self, maze):  # Adding Goblins and Monsters to the maze recursively
         self._coordY = random.randint(1, len(maze) - 2)
         self._coordX = random.randint(1, len(maze[self._coordY]) - 2)
         while maze[self._coordY][self._coordX] != 0:
             # Continue as long as don't find a 0 in the maze
             # I found this to be the most efficient way to ensure that there won't be an infinite loop
-            list_row = random.sample(range(1, len(maze) - 1), len(maze) - 2)  # Generate a list of unique random numbers for the row
-            list_col = random.sample(range(1, len(maze[self._coordY]) - 1), len(maze[self._coordY]) - 2)  # Generate a list of unique random numbers for the col
+            list_row = random.sample(range(1, len(maze) - 1),
+                                     len(maze) - 2)  # Generate a list of unique random numbers for the row
+            list_col = random.sample(range(1, len(maze[self._coordY]) - 1), len(
+                maze[self._coordY]) - 2)  # Generate a list of unique random numbers for the col
             for y in list_row:
                 for x in list_col:
                     if maze[y][x] == 0:

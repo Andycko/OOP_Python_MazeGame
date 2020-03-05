@@ -1,10 +1,11 @@
-from hero import Hero
-from monster import Monster
-from goblin import Goblin
-from maze_gen_recursive import make_maze_recursion
 from copy import deepcopy
+
 from getch1 import *
+from goblin import Goblin
 from helpers import clear_console
+from hero import Hero
+from maze_gen_recursive import make_maze_recursion
+from monster import Monster
 
 WALL_CHAR = "■"
 SPACE_CHAR = " "
@@ -15,6 +16,7 @@ MONSTER_CHAR = "M"
 
 class _Environment:
     """Environment includes Maze+Monster+Goblin"""
+
     def __init__(self, maze):
         self._environment = deepcopy(maze)
 
@@ -49,14 +51,13 @@ class _Environment:
 
 
 class Game:
-
     _count = 0
 
     def __init__(self):
         self.myHero = Hero()
         # self.monsters, self.goblins, self.maze = make_maze_recursion(20, 20)
         self.maze = make_maze_recursion(20, 20)
-        self.maze = self.myHero.spawn(self.maze)    # Spawning hero, returning maze with the hero in it
+        self.maze = self.myHero.spawn(self.maze)  # Spawning hero, returning maze with the hero in it
         self.MyEnvironment = _Environment(self.maze)  # initial environment is the maze itself
         self._count = 0
 
@@ -77,14 +78,14 @@ class Game:
             print("Sorry, not a valid command. Try inputting :help for list of commands")
 
     def play(self):
-        self.myHero.health(show=True)   # Just showing the health at the start of game
+        self.myHero.health(show=True)  # Just showing the health at the start of game
         self.MyEnvironment.print_environment(self.myHero)
         print("============================", self._count)  # Leaving this here just for debugging purposes
 
         while not self.myHero.aborted:  # Checking if player has not aborted the game with :exit command or died
             # if self.myHero.move_debug(self.MyEnvironment):  #this works in debug mode
             ch = getch()
-            if ch == '\033' or ch == b'\xe0':   # Checking if player is pressing arrow keys
+            if ch == '\033' or ch == b'\xe0':  # Checking if player is pressing arrow keys
                 self.myHero.move(self.MyEnvironment, ch)
                 self.MyEnvironment.print_environment(self.myHero)
                 self._count += 1
@@ -92,11 +93,10 @@ class Game:
             else:
                 if ch == b':' or ch == ":":  # Checking if player inputs : for command input
                     self.menu()
-                else:   # If not : then it is not a valid input
+                else:  # If not : then it is not a valid input
                     print("Sorry, not a valid input. Move with arrows and enter commands with \":\"")
 
 
 if __name__ == "__main__":
-
     myGame = Game()
     myGame.play()

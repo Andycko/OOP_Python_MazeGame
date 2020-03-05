@@ -5,9 +5,9 @@
 #
 
 import random
-from monster import FighterMonster, ThiefMonster, GamerMonster
-from goblin import WealthGoblin, HealthGoblin, GamerGoblin
 
+from goblin import WealthGoblin, HealthGoblin, GamerGoblin
+from monster import FighterMonster, ThiefMonster, GamerMonster
 
 SCREEN_WIDTH = 1000
 SCREEN_HEIGHT = 700
@@ -20,6 +20,7 @@ TILE_CRATE = 1
 # Openings go on ODD rows/columns
 MAZE_HEIGHT = 51
 MAZE_WIDTH = 51
+
 
 def create_empty_grid(width, height, default_value=TILE_EMPTY):
     """ Create an empty grid. """
@@ -121,8 +122,8 @@ def print_maze(maze, wall="#", space="-", hero="H", goblin="G", monster="M"):
     """print out the maze in the terminal"""
     for row in maze:
         row_str = str(row)
-        row_str = row_str.replace("1", wall)    # replace the wall character
-        row_str = row_str.replace("0", space)   # replace the space character
+        row_str = row_str.replace("1", wall)  # replace the wall character
+        row_str = row_str.replace("0", space)  # replace the space character
         print("".join(row_str))
 
 
@@ -136,15 +137,17 @@ def add_goblin_monster(maze):  # Adding Goblins and Monsters to the maze recursi
         while maze[rand_row][rand_col] != 0:
             # Continue as long as don't find a 0 in the maze
             # I found this to be the most efficient way to ensure that there won't be an infinite loop
-            list_row = random.sample(range(1, len(maze) - 1), len(maze) - 2)  # Generate a list of unique random numbers for the row
-            list_col = random.sample(range(1, len(maze[rand_row]) - 1), len(maze[rand_row]) - 2)    # Generate a list of unique random numbers for the col
-            try:    # using error catching because I need to break two for loops at the same time
+            list_row = random.sample(range(1, len(maze) - 1),
+                                     len(maze) - 2)  # Generate a list of unique random numbers for the row
+            list_col = random.sample(range(1, len(maze[rand_row]) - 1),
+                                     len(maze[rand_row]) - 2)  # Generate a list of unique random numbers for the col
+            try:  # using error catching because I need to break two for loops at the same time
                 for y in list_row:
                     for x in list_col:
                         if maze[y][x] == 0:
                             rand_col = x
                             rand_row = y
-                            raise IndexError    # again raising exception just to break out of loop
+                            raise IndexError  # again raising exception just to break out of loop
             except IndexError:
                 continue
 
@@ -156,7 +159,7 @@ def add_goblin_monster(maze):  # Adding Goblins and Monsters to the maze recursi
                 ThiefMonster(rand_col, rand_row)
             else:
                 GamerMonster(rand_col, rand_row)
-                
+
         else:
             creature_type = random.randint(1, 3)
             if creature_type == 1:
@@ -171,10 +174,11 @@ def add_goblin_monster(maze):  # Adding Goblins and Monsters to the maze recursi
     # return monsters, goblins, maze
     return maze
 
+
 if __name__ == "__main__":
     maze = make_maze_recursion(7, 7)
     print_maze(maze)
-    print(maze,"#", "-")
+    print(maze, "#", "-")
     print(maze[2][1])
     print(maze[1][2])
     print(maze[3][2])

@@ -3,6 +3,8 @@ from monster import Monster
 from goblin import Goblin
 from maze_gen_recursive import make_maze_recursion
 from copy import deepcopy
+from getch1 import *
+from helpers import clear_console
 
 WALL_CHAR = "■"
 SPACE_CHAR = " "
@@ -58,6 +60,22 @@ class Game:
         self.MyEnvironment = _Environment(self.maze)  # initial environment is the maze itself
         self._count = 0
 
+    def menu(self):
+        command = input(":")
+        if command == "exit":
+            self.myHero.aborted = True
+            clear_console()
+            return False
+        elif command == "help":
+            print("Commands you can use:"
+                  "\n\thelp\t- prints list of all commands"
+                  "\n\tscore\t- prints your score"
+                  "\n\texit\t- exits the game")
+        elif command == "score":
+            print("This is your score, whatever...")
+        else:
+            print("Sorry, not a valid command. Try inputting :help for list of commands")
+
     def play(self):
         self.myHero.health(show=True)   # Just showing the health at the start of game
         self.MyEnvironment.print_environment(self.myHero)
@@ -65,10 +83,17 @@ class Game:
 
         while not self.myHero.aborted:  # Checking if player has not aborted the game with :exit command or died
             # if self.myHero.move_debug(self.MyEnvironment):  #this works in debug mode
-            if self.myHero.move(self.MyEnvironment):
+            ch = getch()
+            if ch == '\033' or ch == b'\xe0':   # Checking if player is pressing arrow keys
+                self.myHero.move(self.MyEnvironment, ch)
                 self.MyEnvironment.print_environment(self.myHero)
                 self._count += 1
                 print("============================", self._count)
+            else:
+                if ch == b':' or ch == ":":  # Checking if player inputs : for command input
+                    self.menu()
+                else:   # If not : then it is not a valid input
+                    print("Sorry, not a valid input. Move with arrows and enter commands with \":\"")
 
 
 if __name__ == "__main__":

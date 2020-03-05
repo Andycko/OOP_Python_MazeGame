@@ -117,92 +117,89 @@ class Hero:
         else:
             print("Need to be a monster or a goblin")
 
-    def move(self, environment):
+    def move(self, environment, character):
         """move in the maze, it is noted this function may not work in the debug mode"""
-        ch = getch()
-        if ch == '\033' or ch == b'\xe0':
+        # ch = getch()
+        # if ch == '\033' or ch == b'\xe0':
             # Added this if statement to differentiate between command input and arrow input
             # as when using getch with arrow keys you get three inputs instead of one -> '\033', '[', <KEY CODE>
 
-            if ch == '\033':    # I figured this is required on Unix
-                getch()
-                
-            ch2 = getch()
-            if ch2 == b'H' or ch2 == "A":
-                # the up arrow key was pressed
-                clear_console()
-                print("up key pressed - ", end="")
-                if self.check_path(environment, "top"):
-                    environment.set_coord(self._coordY, self._coordX, 0)
-                    self._coordY -= 1
-                    environment.set_coord(self._coordY, self._coordX, 2)
-                    return self.health()
-                else:
-                    print("Not a valid move")
-                    self.health(show=True)
-                    return True
+        if character == '\033':    # I figured this is required on Unix
+            getch()
 
-            elif ch2 == b'P' or ch2 == "B":
-                # the down arrow key was pressed
-                clear_console()
-                print("down key pressed - ", end="")
-                if self.check_path(environment, "bottom"):
-                    environment.set_coord(self._coordY, self._coordX, 0)
-                    self._coordY += 1
-                    environment.set_coord(self._coordY, self._coordX, 2)
-                    return self.health()
-                else:
-                    print("Not a valid move")
-                    self.health(show=True)
-                    return True
-
-            elif ch2 == b'K' or ch2 == "D":
-                # the left arrow key was pressed
-                clear_console()
-                print("left key pressed - ", end="")
-                if self.check_path(environment, "left"):
-                    environment.set_coord(self._coordY, self._coordX, 0)
-                    self._coordX -= 1
-                    environment.set_coord(self._coordY, self._coordX, 2)
-                    return self.health()
-                else:
-                    print("Not a valid move")
-                    self.health(show=True)
-                    return True
-
-            elif ch2 == b'M' or ch2 == "C":
-                # the right arrow key was pressed
-                clear_console()
-                print("right key pressed - ", end="")
-                if self.check_path(environment, "right"):
-                    environment.set_coord(self._coordY, self._coordX, 0)
-                    self._coordX += 1
-                    environment.set_coord(self._coordY, self._coordX, 2)
-                    return self.health()
-                else:
-                    print("Not a valid move")
-                    self.health(show=True)
-                    return True
-        else:
-            # Menu for user to use during the game
-            if ch == b':' or ch == ":":    # Using getch input saved in ch, as I have already done that in the parent if statement
-                command = input(":")
-                if command == "exit":
-                    self.aborted = True
-                    clear_console()
-                    return False
-                elif command == "help":
-                    print("Commands you can use:"
-                          "\n\thelp\t- prints list of all commands"
-                          "\n\tscore\t- prints your score"
-                          "\n\texit\t- exits the game")
-                elif command == "score":
-                    print("This is your score, whatever...")
-                else:
-                    print("Sorry, not a valid command. Try inputting :help for list of commands")
-
+        ch2 = getch()
+        if ch2 == b'H' or ch2 == "A":
+            # the up arrow key was pressed
+            clear_console()
+            print("up key pressed - ", end="")
+            if self.check_path(environment, "top"):
+                environment.set_coord(self._coordY, self._coordX, 0)
+                self._coordY -= 1
+                environment.set_coord(self._coordY, self._coordX, 2)
+                return self.health()
             else:
-                print("Sorry, not a valid input. Move with arrows and enter commands with \":\"")
+                print("Not a valid move")
+                self.health(show=True)
+                return True
+        elif ch2 == b'P' or ch2 == "B":
+            # the down arrow key was pressed
+            clear_console()
+            print("down key pressed - ", end="")
+            if self.check_path(environment, "bottom"):
+                environment.set_coord(self._coordY, self._coordX, 0)
+                self._coordY += 1
+                environment.set_coord(self._coordY, self._coordX, 2)
+                return self.health()
+            else:
+                print("Not a valid move")
+                self.health(show=True)
+                return True
+        elif ch2 == b'K' or ch2 == "D":
+            # the left arrow key was pressed
+            clear_console()
+            print("left key pressed - ", end="")
+            if self.check_path(environment, "left"):
+                environment.set_coord(self._coordY, self._coordX, 0)
+                self._coordX -= 1
+                environment.set_coord(self._coordY, self._coordX, 2)
+                return self.health()
+            else:
+                print("Not a valid move")
+                self.health(show=True)
+                return True
+        elif ch2 == b'M' or ch2 == "C":
+            # the right arrow key was pressed
+            clear_console()
+            print("right key pressed - ", end="")
+            if self.check_path(environment, "right"):
+                environment.set_coord(self._coordY, self._coordX, 0)
+                self._coordX += 1
+                environment.set_coord(self._coordY, self._coordX, 2)
+                return self.health()
+            else:
+                print("Not a valid move")
+                self.health(show=True)
+                return True
+        # else:
+            # Menu for user to use during the game
+            # if ch == b':' or ch == ":":    # Using getch input saved in ch, as I have already done that in the parent if statement
+            #     command = input(":")
+            #     if command == "exit":
+            #         self.aborted = True
+            #         clear_console()
+            #         return False
+            #     elif command == "help":
+            #         print("Commands you can use:"
+            #               "\n\thelp\t- prints list of all commands"
+            #               "\n\tscore\t- prints your score"
+            #               "\n\texit\t- exits the game")
+            #     elif command == "score":
+            #         print("This is your score, whatever...")
+            #     else:
+            #         print("Sorry, not a valid command. Try inputting :help for list of commands")
+            #
+            # else:
+            #     print("Sorry, not a valid input. Move with arrows and enter commands with \":\"")
 
         return False
 

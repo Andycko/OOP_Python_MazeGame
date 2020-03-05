@@ -21,6 +21,7 @@ class _Getch:
 
 class _GetchUnix:
     def __init__(self):
+        import sys, tty, termios
         pass
 
     def __call__(self):
@@ -37,6 +38,7 @@ class _GetchUnix:
 
 class _GetchWindows:
     def __init__(self):
+        import msvcrt
         pass
 
     def __call__(self):

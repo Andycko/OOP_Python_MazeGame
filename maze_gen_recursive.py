@@ -157,7 +157,6 @@ def add_goblin_monster(maze):  # Adding Goblins and Monsters to the maze recursi
             else:
                 GamerMonster(rand_col, rand_row)
                 
-            maze[rand_row][rand_col] = 4    # Adding Monsters
         else:
             creature_type = random.randint(1, 3)
             if creature_type == 1:
@@ -166,8 +165,6 @@ def add_goblin_monster(maze):  # Adding Goblins and Monsters to the maze recursi
                 HealthGoblin(rand_col, rand_row)
             else:
                 GamerGoblin(rand_col, rand_row)
-
-            maze[rand_row][rand_col] = 3    # Adding Goblins
 
         counter += 1
 

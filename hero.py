@@ -21,6 +21,9 @@ class Hero:
         self._gem = 3
         self.aborted = False
 
+    def get_coordinates(self):
+        return self._coordX, self._coordY
+
     def get_health(self):
         return self._health
 

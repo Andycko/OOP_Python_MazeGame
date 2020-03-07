@@ -1,5 +1,6 @@
 from copy import deepcopy
 import pickle
+import json
 import textwrap
 
 from getch1 import *
@@ -81,12 +82,10 @@ class Game:
                   "\n\thelp\t- prints list of all commands"
                   "\n\tscore\t- prints your score"
                   "\n\tsave\t- save the current state of the game"
-                  "\n\tload\t- load previously saved game"
                   "\n\texit\t- exits the game")
         elif command == "score":
-            print("This is your score, whatever...")
-        elif command == "load":
-            self.load_game()
+            print("This is the current scoreboard, to be in it, finish your game first.")
+            self.print_scoreboard()
         elif command == "save":
             self.save_game()
         elif command == "exit":
@@ -97,26 +96,30 @@ class Game:
             print("Sorry, not a valid command. Try inputting :help for list of commands")
 
     def save_game(self):
+        """ Saving data from the game to a pickle file """
         print("...saving the game")
-        save = {"hero": self.myHero,
-                "all_monsters": Monster.all_monsters,
-                "visited_monsters": Monster.visited_monsters,
-                "all_goblins": Goblin.all_goblins,
-                "environment": self.MyEnvironment,
-                "difficulty": self.difficulty}
-        pickle.dump(save, open("save_file.dat", "wb"))
+        save = {
+            "hero": self.myHero,
+            "all_monsters": Monster.all_monsters,
+            "visited_monsters": Monster.visited_monsters,
+            "all_goblins": Goblin.all_goblins,
+            "environment": self.MyEnvironment,
+            "difficulty": self.difficulty
+        }
+        pickle.dump(save, open("misc/save_file.dat", "wb"))
         clear_console()
         print("...your game has been successfully saved")
         print(self.myHero)
         self.MyEnvironment.print_environment(self.myHero)
 
     def load_game(self):
+        """ Loading data from a pickle file """
         print("...loading game from the last save")
         try:
-            load = pickle.load(open("save_file.dat", "rb"))
+            load = pickle.load(open("misc/save_file.dat", "rb"))
             self.myHero = load.get("hero")
             Monster.all_monsters = load.get("all_monsters")
-            Monster.visited_monsters = load.get("visited_monster")
+            Monster.visited_monsters = load.get("visited_monsters")
             Goblin.all_goblins = load.get("all_goblins")
             self.MyEnvironment = load.get("environment")
             self.difficulty = load.get("difficulty")
@@ -129,6 +132,54 @@ class Game:
         print(self.myHero)
         self.MyEnvironment.print_environment(self.myHero)
         return True
+
+    def save_score(self):
+        """ Save score of the current game to the scoreboard """
+        with open("misc/scoreboard.json") as scoreboard:
+            data = json.load(scoreboard)
+            data[self.difficulty].append({"player": {"name": self.myHero.name, "score": self.myHero.get_coins()}})
+
+        with open("misc/scoreboard.json", 'w') as f:
+            json.dump(data, f, indent=4)
+
+    def print_scoreboard(self):
+        """ Load the scoreboard and print it"""
+        with open("banner.txt", "r") as f:
+            for x in f:
+                print(x, end="")
+
+        with open("misc/scoreboard.json") as scoreboard:
+            data = json.load(scoreboard)
+            count = 1
+            players = {}
+            print("+++++++++++++++++++++++++++++")
+            for diff in data:
+                # Going through all the players in json data, checking for duplicate names while copying to a dictionary
+                print("\n  " + str(diff.upper()) + ":")
+                rep = 1
+                for player in data[diff]:
+                    name = player["player"]["name"]
+                    while name in players:
+                        rep += 1
+                        name = player["player"]["name"] + str(rep)
+
+                    rep = 1
+                    players[name] = player["player"]["score"]
+
+                # part of next line coppied from https://ide.geeksforgeeks.org/5Ttw73QBJ0 and modified
+                # sorting the players based on the highest score
+                for player in sorted(players.items(), key=lambda kv: (kv[1], kv[0]))[::-1]:
+                    if len(player[0]) <= 1:
+                        tab = "\t\t"
+                    else:
+                        tab = "\t"
+                    print("  " + str(count) + ".", player[0], tab, player[1])
+                    count += 1
+
+                count = 0
+                players = {}
+                print("\n+++++++++++++++++++++++++++++")
+
 
     def play(self, loaded=False):
         if loaded:
@@ -155,9 +206,17 @@ class Game:
         if not self.myHero.aborted:
             print("Congratulations mighty warrior, you defeated all the monsters and collected all your missing gems!",
                   "\nFeel free to find your name on the scoreboard.")
+            self.save_score()
+            self.print_scoreboard()
+            print("Thank you for playing the Maze Game made by Andrej Szalma! Feel free to check out the code on my github -> https://github.com/Andycko/OOP_Python_MazeGame")
+        else:
+            self.print_scoreboard()
+            print("Thank you for playing the Maze Game made by Andrej Szalma! Feel free to check out the code on my github -> https://github.com/Andycko/OOP_Python_MazeGame")
 
 
 def welcome_screen():
+    """ Function to show the welcome screen with all the prompts before the game starts.
+        Not in the Game class as input from this function is needed for the Game __init__ """
     clear_console()
     with open("banner.txt", "r") as f:
         for x in f:
@@ -171,17 +230,17 @@ def welcome_screen():
 
     name = input("Please tell me your name brave warrior: ")
 
-    message = "\nWelcome in the Maze Game " + str(name) + ","\
-        "\nYou have been researching the ruins of the haunted castle Barrowhaven on your"\
-        "quest to find the lost treasures of the Kingdom Of Glauvia. So far you have defeated orcs, strigas, vampires"\
-        ", vukolaks and many other malicious creatures. But you never fought more than one at a time. However, this "\
-        "time, there were many of them. Monsters they were.\n\nThe last thing you remember is getting punched in the "\
-        "head and you have now woken up in this maze. A maze without an exit. You soon realise that you are hurt and "\
-        "that your gems have been stolen. There is no way you could continue your journey without them, therefore you"\
-        " need to find all the monsters and get your gems. But think twice before you start your quest, because every"\
-        " step will cost you 1 health. You might also stumble across different types of creatures, be careful!"\
-        "Get back all your gems and you can leave the maze.\n\nDon't forget the hero with the most coins at the end "\
-        "gets the highest score. You can move through the maze with your arrows and use \":\" to enter commands. "\
+    message = "\nWelcome in the Maze Game " + str(name) + "," \
+        "\nYou have been researching the ruins of the haunted castle Barrowhaven on your " \
+        "quest to find the lost treasures of the Kingdom Of Glauvia. So far you have defeated orcs, strigas, vampires" \
+        ", vukolaks and many other malicious creatures. But you never fought more than one at a time. However, this " \
+        "time, there were many of them. Monsters they were.\n\nThe last thing you remember is getting punched in the " \
+        "head and you have now woken up in this maze. A maze without an exit. You soon realize that you are hurt and " \
+        "that your gems have been stolen. There is no way you could continue your journey without them, therefore you" \
+        " need to find all the monsters and get your gems. But think twice before you start your quest, because every" \
+        " step will cost you 1 health. You might also stumble across different types of creatures, be careful! " \
+        "Get back all your gems and you can leave the maze.\n\nDon't forget the hero with the most coins at the end " \
+        "gets the highest score. You can move through the maze with your arrows and use \":\" to enter commands. " \
         "\n\nEnough talking now, you should get going. May good luck be on your side!\n"
 
     term_width, term_height = get_terminal_size()

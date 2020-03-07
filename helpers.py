@@ -1,4 +1,5 @@
 import os
+import json
 import random
 from sys import platform as _platform
 
@@ -70,7 +71,6 @@ def get_terminal_size():
         #except:
         #    cr = (25, 80)
     return int(cr[1]), int(cr[0])
-
 
 if __name__ == "__main__":
     a, b = get_terminal_size()

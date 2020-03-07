@@ -25,7 +25,7 @@ class Hero:
         self.aborted = False
 
     def __str__(self):
-        return "Your health is " + str(self._health) + "\nYou have " + str(self._coins) + " coins"\
+        return "Your health is " + str(self._health) + "\nYou have " + str(self._coins) + " coins "\
                 "and " + str(self._gems) + " gems"
 
     def give_gem(self):

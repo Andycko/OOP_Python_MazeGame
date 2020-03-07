@@ -153,6 +153,7 @@ def add_goblin_monster(maze, difficulty):  # Adding Goblins and Monsters to the 
 
         if counter < 5:
             creature_type = random.randint(1, 3)
+            maze[rand_row][rand_col] = 4
             if creature_type == 1:
                 FighterMonster(rand_col, rand_row, difficulty)
             elif creature_type == 2:
@@ -161,6 +162,7 @@ def add_goblin_monster(maze, difficulty):  # Adding Goblins and Monsters to the 
                 GamerMonster(rand_col, rand_row, difficulty)
 
         else:
+            maze[rand_row][rand_col] = 3
             creature_type = random.randint(1, 3)
             if creature_type == 1:
                 WealthGoblin(rand_col, rand_row, difficulty)

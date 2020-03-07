@@ -14,14 +14,25 @@ from monster import Monster
 class Hero:
     """this is the hero class, further define it please"""
 
-    def __init__(self):
+    def __init__(self, name):
         """set the coordinate of the hero in the maze"""
+        self.name = name
         self._coordX = 2
         self._coordY = 2
         self._health = 100
         self._coins = 1000  # gold coins the hero have.
-        self._gem = 3
+        self._gems = 0
         self.aborted = False
+
+    def __str__(self):
+        return "Your health is " + str(self._health) + "\nYou have " + str(self._coins) + " coins"\
+                "and " + str(self._gems) + " gems"
+
+    def give_gem(self):
+        self._gems += 1
+
+    def get_gems(self):
+        return self._gems
 
     def get_coordinates(self):
         return self._coordX, self._coordY
@@ -43,15 +54,14 @@ class Hero:
         else:
             self._health = 100
 
-    def health(self, show=False):
-        if show:
-            print("Your health is", self._health)
-        elif self._health > 1:
+    def health(self):
+        if self._health > 1:
             self._health -= 1
-            print("Your health is", self._health)
+            print(self)
             return True
         else:
             self._health = 0
+            print(self)
             print("Your health has dropped to", self._health, ", you die now...")
             self.aborted = True
             return False
@@ -128,54 +138,54 @@ class Hero:
         if ch2 == b'H' or ch2 == "A":
             # the up arrow key was pressed
             # clear_console()
-            print("up key pressed - ", end="")
             if self.check_path(environment, "top"):
+                print("up key pressed")
                 environment.set_coord(self._coordY, self._coordX, 0)
                 self._coordY -= 1
                 environment.set_coord(self._coordY, self._coordX, 2)
                 return self.health()
             else:
-                print("Not a valid move")
-                self.health(show=True)
+                print("up key pressed - not a valid move")
+                print(self)
                 return True
         elif ch2 == b'P' or ch2 == "B":
             # the down arrow key was pressed
             # clear_console()
-            print("down key pressed - ", end="")
             if self.check_path(environment, "bottom"):
+                print("down key pressed")
                 environment.set_coord(self._coordY, self._coordX, 0)
                 self._coordY += 1
                 environment.set_coord(self._coordY, self._coordX, 2)
                 return self.health()
             else:
-                print("Not a valid move")
-                self.health(show=True)
+                print("down key pressed - not a valid move")
+                print(self)
                 return True
         elif ch2 == b'K' or ch2 == "D":
             # the left arrow key was pressed
             # clear_console()
-            print("left key pressed - ", end="")
             if self.check_path(environment, "left"):
+                print("left key pressed")
                 environment.set_coord(self._coordY, self._coordX, 0)
                 self._coordX -= 1
                 environment.set_coord(self._coordY, self._coordX, 2)
                 return self.health()
             else:
-                print("Not a valid move")
-                self.health(show=True)
+                print("left key pressed - not a valid move")
+                print(self)
                 return True
         elif ch2 == b'M' or ch2 == "C":
             # the right arrow key was pressed
             # clear_console()
-            print("right key pressed - ", end="")
             if self.check_path(environment, "right"):
+                print("right key pressed")
                 environment.set_coord(self._coordY, self._coordX, 0)
                 self._coordX += 1
                 environment.set_coord(self._coordY, self._coordX, 2)
                 return self.health()
             else:
-                print("Not a valid move")
-                self.health(show=True)
+                print("right key pressed - Not a valid move")
+                print(self)
                 return True
 
         return False

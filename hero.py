@@ -127,7 +127,7 @@ class Hero:
         ch2 = getch()
         if ch2 == b'H' or ch2 == "A":
             # the up arrow key was pressed
-            clear_console()
+            # clear_console()
             print("up key pressed - ", end="")
             if self.check_path(environment, "top"):
                 environment.set_coord(self._coordY, self._coordX, 0)
@@ -140,7 +140,7 @@ class Hero:
                 return True
         elif ch2 == b'P' or ch2 == "B":
             # the down arrow key was pressed
-            clear_console()
+            # clear_console()
             print("down key pressed - ", end="")
             if self.check_path(environment, "bottom"):
                 environment.set_coord(self._coordY, self._coordX, 0)
@@ -153,7 +153,7 @@ class Hero:
                 return True
         elif ch2 == b'K' or ch2 == "D":
             # the left arrow key was pressed
-            clear_console()
+            # clear_console()
             print("left key pressed - ", end="")
             if self.check_path(environment, "left"):
                 environment.set_coord(self._coordY, self._coordX, 0)
@@ -166,7 +166,7 @@ class Hero:
                 return True
         elif ch2 == b'M' or ch2 == "C":
             # the right arrow key was pressed
-            clear_console()
+            # clear_console()
             print("right key pressed - ", end="")
             if self.check_path(environment, "right"):
                 environment.set_coord(self._coordY, self._coordX, 0)

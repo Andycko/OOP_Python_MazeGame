@@ -15,7 +15,7 @@ MONSTER_CHAR = "M"
 
 
 class _Environment:
-    """Environment includes Maze+Monster+Goblin"""
+    """Environment includes Maze"""
 
     def __init__(self, maze):
         self._environment = deepcopy(maze)
@@ -26,8 +26,8 @@ class _Environment:
     def get_coord(self, x, y):
         return self._environment[x][y]
 
-    def print_environment(self, hero):
-        """print out the environment in the terminal"""
+    def update_environment(self, hero):
+        """ Updates monsters and goblins in the maze """
         for monster in Monster.all_monsters:
             coordx, coordy = monster.get_coordinates()
             h_coordx, h_coordy = hero.get_coordinates()
@@ -39,6 +39,10 @@ class _Environment:
             coordx, coordy = goblin.get_coordinates()
             self._environment[coordy][coordx] = 3
 
+    def print_environment(self, hero):
+        """ Print out the environment in the terminal """
+
+        self.update_environment(hero)
         for row in self._environment:
             row_str = str(row)
             row_str = row_str.replace("1", WALL_CHAR)  # replace the wall character
@@ -53,15 +57,16 @@ class _Environment:
 class Game:
     _count = 0
 
-    def __init__(self):
+    def __init__(self, difficulty):
         self.myHero = Hero()
         # self.monsters, self.goblins, self.maze = make_maze_recursion(20, 20)
-        self.maze = make_maze_recursion(20, 20)
+        self.maze = make_maze_recursion(20, 20, difficulty)
         self.maze = self.myHero.spawn(self.maze)  # Spawning hero, returning maze with the hero in it
         self.MyEnvironment = _Environment(self.maze)  # initial environment is the maze itself
         self._count = 0
 
     def menu(self):
+        """ Opens a command prompt waiting for input, the game can be controlled from here by the user """
         command = input(":")
         if command == "exit":
             self.myHero.aborted = True
@@ -86,6 +91,7 @@ class Game:
             # if self.myHero.move_debug(self.MyEnvironment):  #this works in debug mode
             ch = getch()
             if ch == '\033' or ch == b'\xe0':  # Checking if player is pressing arrow keys
+                clear_console()
                 self.myHero.move(self.MyEnvironment, ch)
                 self.MyEnvironment.print_environment(self.myHero)
                 self._count += 1
@@ -98,5 +104,5 @@ class Game:
 
 
 if __name__ == "__main__":
-    myGame = Game()
+    myGame = Game(input("Please pick a level of difficulty [easy, medium, hard]: "))
     myGame.play()

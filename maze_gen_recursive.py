@@ -106,7 +106,7 @@ def make_maze_recursive_call(maze, top, bottom, left, right):
         make_maze_recursive_call(maze, y, bottom, left, x)
 
 
-def make_maze_recursion(maze_width, maze_height):
+def make_maze_recursion(maze_width, maze_height, difficulty):
     """ Make the maze by recursively splitting it into four rooms. """
     maze = create_empty_grid(maze_width, maze_height)
     # Fill in the outside walls
@@ -115,7 +115,7 @@ def make_maze_recursion(maze_width, maze_height):
     # Start the recursive process
     make_maze_recursive_call(maze, maze_height - 1, 0, 0, maze_width - 1)
     # add_goblin_monster(maze)
-    return add_goblin_monster(maze)
+    return add_goblin_monster(maze, difficulty)
 
 
 def print_maze(maze, wall="#", space="-", hero="H", goblin="G", monster="M"):
@@ -127,7 +127,7 @@ def print_maze(maze, wall="#", space="-", hero="H", goblin="G", monster="M"):
         print("".join(row_str))
 
 
-def add_goblin_monster(maze):  # Adding Goblins and Monsters to the maze recursively
+def add_goblin_monster(maze, difficulty):  # Adding Goblins and Monsters to the maze recursively
     counter = 0
 
     while counter != 10:
@@ -154,20 +154,20 @@ def add_goblin_monster(maze):  # Adding Goblins and Monsters to the maze recursi
         if counter < 5:
             creature_type = random.randint(1, 3)
             if creature_type == 1:
-                FighterMonster(rand_col, rand_row)
+                FighterMonster(rand_col, rand_row, difficulty)
             elif creature_type == 2:
-                ThiefMonster(rand_col, rand_row)
+                ThiefMonster(rand_col, rand_row, difficulty)
             else:
-                GamerMonster(rand_col, rand_row)
+                GamerMonster(rand_col, rand_row, difficulty)
 
         else:
             creature_type = random.randint(1, 3)
             if creature_type == 1:
-                WealthGoblin(rand_col, rand_row)
+                WealthGoblin(rand_col, rand_row, difficulty)
             elif creature_type == 2:
-                HealthGoblin(rand_col, rand_row)
+                HealthGoblin(rand_col, rand_row, difficulty)
             else:
-                GamerGoblin(rand_col, rand_row)
+                GamerGoblin(rand_col, rand_row, difficulty)
 
         counter += 1
 

@@ -9,9 +9,15 @@ from helpers import rock_paper_scissors
 class Goblin:
     all_goblins = []
 
-    def __init__(self, coord_x, coord_y):
+    def __init__(self, coord_x, coord_y, difficulty):
         self._coordX = coord_x
         self._coordY = coord_y
+        if difficulty == "hard":
+            self._difficulty = 0.6
+        elif difficulty == "medium":
+            self._difficulty = 0.9
+        else:
+            self._difficulty = 1.2
         Goblin.all_goblins.append(self)
 
     def get_coordinates(self):
@@ -26,10 +32,10 @@ class Goblin:
 
 
 class WealthGoblin(Goblin):
-    def __init__(self, coord_x, coord_y):
-        super(WealthGoblin, self).__init__(coord_x, coord_y)
+    def __init__(self, coord_x, coord_y, difficulty):
+        super(WealthGoblin, self).__init__(coord_x, coord_y, difficulty)
         self._coins = random.randint(10, 300)
-        self._probability = round(((400 - self._coins) * random.uniform(0.6, 1.2)) / 4)
+        self._probability = round(((400 - self._coins) * self._difficulty) / 4)
 
     def give_coin(self, hero):
         probability_list = range(1, self._probability + 1)  # list of numbers stating the probability
@@ -41,10 +47,10 @@ class WealthGoblin(Goblin):
 
 
 class HealthGoblin(Goblin):
-    def __init__(self, coord_x, coord_y):
-        super(HealthGoblin, self).__init__(coord_x, coord_y)
+    def __init__(self, coord_x, coord_y, difficulty):
+        super(HealthGoblin, self).__init__(coord_x, coord_y, difficulty)
         self._health = random.randint(1, 50)
-        self._probability = round((100 - self._health) * random.uniform(0.6, 1.2))
+        self._probability = round((100 - self._health) * self._difficulty)
 
     def give_health(self, hero):
         probability_list = range(1, self._probability + 1)  # list of numbers stating the probability
@@ -56,8 +62,8 @@ class HealthGoblin(Goblin):
 
 
 class GamerGoblin(Goblin):
-    def __init__(self, coord_x, coord_y):
-        super(GamerGoblin, self).__init__(coord_x, coord_y)
+    def __init__(self, coord_x, coord_y, difficulty):
+        super(GamerGoblin, self).__init__(coord_x, coord_y, difficulty)
         self._health = random.randint(1, 50)
         self._coins = random.randint(10, 300)
 

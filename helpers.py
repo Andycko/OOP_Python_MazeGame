@@ -12,11 +12,21 @@ def clear_console():
         print("Your platform is unfortunately not supported, see helpers.py")
 
 
+def validated_input():
+    try:
+        player = int(input("Please input your choice in a form of number ranging from 1 to 3: "))
+        while player not in range(1, 4):
+            player = int(input("Please input your choice in a form of number ranging from 1 to 3: "))
+        return player
+    except ValueError:
+        print("Wrong value")
+        validated_input()
+
+
 def rock_paper_scissors():
-    # TODO: Validate input
     print("You are playing a game of rock-paper-scissors!")
     bot = random.randint(1, 3)
-    player = input("Please input your choice in a form of number ranging from 1 to 3: ")
+    player = validated_input()
 
     if bot == player:
         print("Draw, play again please")

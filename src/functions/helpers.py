@@ -27,8 +27,8 @@ def validated_input():
 
 
 def rock_paper_scissors():
-    """ Function providing a plyer - bot game of RPS"""
-    print("You are playing a game of rock-paper-scissors!")
+    """ Function providing a plyer - bot src of RPS"""
+    print("You are playing a src of rock-paper-scissors!")
     bot = random.randint(1, 3)
     player = validated_input()
 

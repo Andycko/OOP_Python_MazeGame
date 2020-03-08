@@ -3,13 +3,13 @@ import pickle
 import json
 import textwrap
 
-from getch1 import *
-from goblin import Goblin
-from helpers import clear_console
-from helpers import get_terminal_size
-from hero import Hero
-from maze_gen_recursive import make_maze_recursion
-from monster import Monster
+from src.functions.getch1 import *
+from src.characters.goblin import Goblin
+from src.functions.helpers import clear_console
+from src.functions.helpers import get_terminal_size
+from src.characters.hero import Hero
+from src.functions.maze_gen_recursive import make_maze_recursion
+from src.characters.monster import Monster
 
 WALL_CHAR = "■"
 SPACE_CHAR = " "
@@ -65,7 +65,7 @@ class Game:
     _count = 0
 
     def __init__(self, difficulty, name=""):
-        if difficulty == "load":  # If the player decides to load instead of a new game, call load_game() method
+        if difficulty == "load":  # If the player decides to load instead of a new src, call load_game() method
             if not self.load_game():
                 exit()
         else:
@@ -77,7 +77,7 @@ class Game:
             self._count = 0
 
     def menu(self):
-        """ Opens a command prompt waiting for input, the game can be controlled from here by the user """
+        """ Opens a command prompt waiting for input, the src can be controlled from here by the user """
         command = input(":")
         command = command.lower()
         if command == "help":
@@ -85,10 +85,10 @@ class Game:
                   "\n\thelp\t- prints list of all commands"
                   "\n\tscoreboard\t- prints your score"
                   "\n\tmap\t- prints out the map of the current maze"
-                  "\n\tsave\t- save the current state of the game"
-                  "\n\texit\t- exits the game")
+                  "\n\tsave\t- save the current state of the src"
+                  "\n\texit\t- exits the src")
         elif command == "scoreboard":
-            print("This is the current scoreboard, to be in it, finish your game first.")
+            print("This is the current scoreboard, to be in it, finish your src first.")
             self.print_scoreboard()
         elif command == "map":
             self.MyEnvironment.print_environment(self.myHero)
@@ -101,8 +101,8 @@ class Game:
             print("Sorry, not a valid command. Try inputting :help for list of commands")
 
     def save_game(self):
-        """ Saving data from the game to a pickle file """
-        print("...saving the game")
+        """ Saving data from the src to a pickle file """
+        print("...saving the src")
         save = {
             "hero": self.myHero,
             "all_monsters": Monster.all_monsters,
@@ -112,17 +112,17 @@ class Game:
             "difficulty": self.difficulty,
             "move_count": self._count
         }
-        pickle.dump(save, open("misc/save_file.dat", "wb"))
+        pickle.dump(save, open("files/save_file.dat", "wb"))
         clear_console()
-        print("...your game has been successfully saved")
+        print("...your src has been successfully saved")
         print(self.myHero)
         self.MyEnvironment.print_environment(self.myHero)
 
     def load_game(self):
         """ Loading data from a pickle file """
-        print("...loading game from the last save")
+        print("...loading src from the last save")
         try:
-            load = pickle.load(open("misc/save_file.dat", "rb"))
+            load = pickle.load(open("files/save_file.dat", "rb"))
             self.myHero = load.get("hero")
             Monster.all_monsters = load.get("all_monsters")
             Monster.visited_monsters = load.get("visited_monsters")
@@ -131,31 +131,33 @@ class Game:
             self.difficulty = load.get("difficulty")
             self._count = load.get("move_count")
         except FileNotFoundError:
-            print("There is no valid last save of the game. Please start a new one or save your current game.")
+            print("There is no valid last save of the src. Please start a new one.")
+            return False
+        except ModuleNotFoundError:
             return False
 
         clear_console()
-        print("...your game has been successfully loaded")
+        print("...your src has been successfully loaded")
         print(self.myHero)
         self.MyEnvironment.print_environment(self.myHero)
         return True
 
     def save_score(self):
-        """ Save score of the current game to the scoreboard """
-        with open("misc/scoreboard.json") as scoreboard:
+        """ Save score of the current src to the scoreboard """
+        with open("files/scoreboard.json") as scoreboard:
             data = json.load(scoreboard)
             data[self.difficulty].append({"player": {"name": self.myHero.name, "score": self.myHero.get_coins()}})
 
-        with open("misc/scoreboard.json", 'w') as f:
+        with open("files/scoreboard.json", 'w') as f:
             json.dump(data, f, indent=4)
 
     def print_scoreboard(self):
         """ Load the scoreboard and print it"""
-        with open("banner.txt", "r") as f:
+        with open("files/banner.txt", "r") as f:
             for x in f:
                 print(x, end="")
 
-        with open("misc/scoreboard.json") as scoreboard:
+        with open("files/scoreboard.json") as scoreboard:
             data = json.load(scoreboard)
             count = 1
             players = {}
@@ -188,15 +190,15 @@ class Game:
                 print("\n+++++++++++++++++++++++++++++")
 
     def play(self, loaded=False):
-        """ Main method of the Game class, starts the game and controls the game when it runs """
-        if loaded:  # loaded is true when the player chooses to load an existing game at the start
+        """ Main method of the Game class, starts the src and controls the src when it runs """
+        if loaded:  # loaded is true when the player chooses to load an existing src at the start
             clear_console()
-            print(self.myHero)  # Just showing the health and the coins of hero at the start of the game
+            print(self.myHero)  # Just showing the health and the coins of hero at the start of the src
             self.MyEnvironment.print_environment(self.myHero)
             print("\nMoves made:", self._count)
 
         while (not self.myHero.aborted) and (self.myHero.get_gems() < 5):
-            # Checking if player has not aborted the game with :exit command or died
+            # Checking if player has not aborted the src with :exit command or died
             ch = getch()
             if ch == '\033' or ch == b'\xe0':  # Checking if player is pressing arrow keys
                 clear_console()
@@ -224,16 +226,16 @@ class Game:
 
 
 def welcome_screen():
-    """ Function to show the welcome screen with all the prompts before the game starts.
+    """ Function to show the welcome screen with all the prompts before the src starts.
         Not in the Game class as input from this function is needed for the Game __init__ """
     clear_console()
-    with open("banner.txt", "r") as f:
+    with open("files/banner.txt", "r") as f:
         for x in f:
             print(x, end="")
 
-    state = input("Welcome, would you like to start a new game or load an existing one? [new, load]: ")
+    state = input("Welcome, would you like to start a new src or load an existing one? [new, load]: ")
     while state not in ["new", "load"]:
-        state = input("Welcome, would you like to start a new game or load an existing one? [new, load]: ")
+        state = input("Welcome, would you like to start a new src or load an existing one? [new, load]: ")
     if state == "load":
         return "load"
 
@@ -246,11 +248,12 @@ def welcome_screen():
         "time, there were many of them. Monsters they were.\n\nThe last thing you remember is getting punched in the " \
         "head and you have now woken up in this maze. A maze without an exit. You soon realize that you are hurt and " \
         "that your gems have been stolen. There is no way you could continue your journey without them, therefore you" \
-        " need to find all the monsters and get your gems. But think twice before you start your quest, because every" \
+        " need to find all the monsters and get your gems. There are 5 gems in total and you can get them by" \
+        " interacting with a monster. But think twice before you start your quest, because every" \
         " step will cost you 1 health. You might also stumble across different types of creatures, be careful! " \
         "Get back all your gems and you can leave the maze.\n\nDon't forget the hero with the most coins at the end " \
-        "gets the highest score. You can move through the maze with your arrows and use \":\" to enter commands. " \
-        "\n\nEnough talking now, you should get going. May good luck be on your side!\n"
+        "gets the highest score. You can move through the maze with your arrows and use \":\" to enter commands.\n\n" \
+        "Enough talking now, you should get going. May good luck be on your side!\n"
 
     term_width, term_height = get_terminal_size()
     wrapped_message = textwrap.fill(message, width=term_width * 0.9, replace_whitespace=False)
@@ -265,7 +268,7 @@ def welcome_screen():
 
 
 def launch_game():
-    """ use this function to launch the game"""
+    """ use this function to launch the src"""
     out = welcome_screen()
     if len(out) == 2:
         my_game = Game(out[0], out[1])
@@ -273,7 +276,3 @@ def launch_game():
     else:
         my_game = Game(out)
         my_game.play()
-
-
-if __name__ == "__main__":
-    launch_game()

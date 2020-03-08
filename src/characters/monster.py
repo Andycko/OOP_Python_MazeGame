@@ -4,7 +4,7 @@
 
 import random
 
-from helpers import rock_paper_scissors
+from src.functions.helpers import rock_paper_scissors
 
 
 class Monster:

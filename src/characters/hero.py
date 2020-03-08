@@ -4,17 +4,16 @@
 
 import random
 
-from getch1 import *
-from goblin import Goblin
-from helpers import clear_console
-from monster import Monster
+from src.functions.getch1 import *
+from src.characters.goblin import Goblin
+from src.characters.monster import Monster
 
 
 class Hero:
     """this is the hero class"""
 
     def __init__(self, name):
-        """set the coordinate of the hero in the maze, name, coins, gems, game state"""
+        """set the coordinate of the hero in the maze, name, coins, gems, src state"""
         self.name = name
         self._coordX = 2
         self._coordY = 2

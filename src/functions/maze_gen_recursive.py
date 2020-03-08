@@ -6,8 +6,8 @@
 
 import random
 
-from goblin import WealthGoblin, HealthGoblin, GamerGoblin
-from monster import FighterMonster, ThiefMonster, GamerMonster
+from src.characters.goblin import WealthGoblin, HealthGoblin, GamerGoblin
+from src.characters.monster import FighterMonster, ThiefMonster, GamerMonster
 
 SCREEN_WIDTH = 1000
 SCREEN_HEIGHT = 700

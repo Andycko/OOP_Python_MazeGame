@@ -118,7 +118,7 @@ def make_maze_recursion(maze_width, maze_height, difficulty):
     return add_goblin_monster(maze, difficulty)
 
 
-def print_maze(maze, wall="#", space="-", hero="H", goblin="G", monster="M"):
+def print_maze(maze, wall="#", space="-"):
     """print out the maze in the terminal"""
     for row in maze:
         row_str = str(row)
@@ -127,8 +127,9 @@ def print_maze(maze, wall="#", space="-", hero="H", goblin="G", monster="M"):
         print("".join(row_str))
 
 
-def add_goblin_monster(maze, difficulty):  # Adding Goblins and Monsters to the maze recursively
-    counter = 0
+def add_goblin_monster(maze, difficulty):
+    """ Creating Goblins and Monsters and adding them to the maze """
+    counter = 0  # to ensure that there will be 5 of each
 
     while counter != 10:
         rand_row = random.randint(1, len(maze) - 2)
@@ -173,15 +174,4 @@ def add_goblin_monster(maze, difficulty):  # Adding Goblins and Monsters to the 
 
         counter += 1
 
-    # return monsters, goblins, maze
     return maze
-
-
-if __name__ == "__main__":
-    maze = make_maze_recursion(7, 7)
-    print_maze(maze)
-    print(maze, "#", "-")
-    print(maze[2][1])
-    print(maze[1][2])
-    print(maze[3][2])
-    print(maze[2][3])

@@ -5,6 +5,7 @@ from sys import platform as _platform
 
 
 def clear_console():
+    """ Multiplatform console window clear """
     if _platform == "linux" or _platform == "linux2" or _platform == "darwin":
         os.system("clear")
     elif _platform == "win32" or _platform == "win64":
@@ -14,6 +15,7 @@ def clear_console():
 
 
 def validated_input():
+    """ Validation for RPS """
     try:
         player = int(input("Please input your choice in a form of number ranging from 1 to 3: "))
         while player not in range(1, 4):
@@ -25,6 +27,7 @@ def validated_input():
 
 
 def rock_paper_scissors():
+    """ Function providing a plyer - bot game of RPS"""
     print("You are playing a game of rock-paper-scissors!")
     bot = random.randint(1, 3)
     player = validated_input()
@@ -65,13 +68,4 @@ def get_terminal_size():
     if not cr:
         cr = (env.get('LINES', 25), env.get('COLUMNS', 80))
 
-        ### Use get(key[, default]) instead of a try/catch
-        #try:
-        #    cr = (env['LINES'], env['COLUMNS'])
-        #except:
-        #    cr = (25, 80)
     return int(cr[1]), int(cr[0])
-
-if __name__ == "__main__":
-    a, b = get_terminal_size()
-    print(a, b)

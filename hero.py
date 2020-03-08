@@ -3,7 +3,6 @@
 #  Version: 1.0
 
 import random
-import sys
 
 from getch1 import *
 from goblin import Goblin
@@ -12,41 +11,45 @@ from monster import Monster
 
 
 class Hero:
-    """this is the hero class, further define it please"""
+    """this is the hero class"""
 
     def __init__(self, name):
-        """set the coordinate of the hero in the maze"""
+        """set the coordinate of the hero in the maze, name, coins, gems, game state"""
         self.name = name
         self._coordX = 2
         self._coordY = 2
         self._health = 100
-        self._coins = 1000  # gold coins the hero have.
+        self._coins = 1000
         self._gems = 0
         self.aborted = False
 
     def __str__(self):
+        """ Print Hero object overwriting """
         return "Your health is " + str(self._health) + "\nYou have " + str(self._coins) + " coins "\
                 "and " + str(self._gems) + " gems"
 
-    def give_gem(self):
-        self._gems += 1
-
     def get_gems(self):
+        """ Gem getter function """
         return self._gems
 
     def get_coordinates(self):
+        """ Coordinate getter function """
         return self._coordX, self._coordY
 
     def get_health(self):
+        """ Health getter function """
         return self._health
 
     def get_coins(self):
+        """ Coin getter function """
         return self._coins
 
     def set_coins(self, value):
+        """ Coin setter function """
         self._coins = value
 
     def set_health(self, value):
+        """ Health setter function """
         if 100 >= value > 0:
             self._health = value
         elif value <= 0:
@@ -54,7 +57,12 @@ class Hero:
         else:
             self._health = 100
 
-    def health(self):
+    def give_gem(self):
+        """ Gem increment function """
+        self._gems += 1
+
+    def take_health(self):
+        """ Used to decrement 1 health / die"""
         if self._health > 1:
             self._health -= 1
             print(self)
@@ -67,6 +75,7 @@ class Hero:
             return False
 
     def check_path(self, environment, direction):
+        """ Checking if there is something in front of the hero before the character moves"""
         if direction == "top":
             x = 0
             y = -1
@@ -116,6 +125,7 @@ class Hero:
             return False
 
     def identify_creature(self, coord_x, coord_y, monster=False, goblin=False):
+        """ Identifying which creature is the monster/goblin in front of the hero"""
         if monster:
             for monster in Monster.all_monsters:
                 x, y = monster.get_coordinates()
@@ -131,108 +141,72 @@ class Hero:
 
     def move(self, environment, character):
         """move in the maze, it is noted this function may not work in the debug mode"""
-        if character == '\033':  # I figured this is required on Unix because after the escape char there is also a "["
+        if character == '\033':
+            # I figured this is required on Unix because after the escape char there is also a "["
             getch()
 
         ch2 = getch()
         if ch2 == b'H' or ch2 == "A":
             # the up arrow key was pressed
-            # clear_console()
             if self.check_path(environment, "top"):
                 print("up key pressed")
                 environment.set_coord(self._coordY, self._coordX, 0)
                 self._coordY -= 1
                 environment.set_coord(self._coordY, self._coordX, 2)
-                return self.health()
+                return self.take_health()
             else:
                 print("up key pressed - not a valid move")
                 print(self)
-                return True
+                return False
         elif ch2 == b'P' or ch2 == "B":
             # the down arrow key was pressed
-            # clear_console()
             if self.check_path(environment, "bottom"):
                 print("down key pressed")
                 environment.set_coord(self._coordY, self._coordX, 0)
                 self._coordY += 1
                 environment.set_coord(self._coordY, self._coordX, 2)
-                return self.health()
+                return self.take_health()
             else:
                 print("down key pressed - not a valid move")
                 print(self)
-                return True
+                return False
         elif ch2 == b'K' or ch2 == "D":
             # the left arrow key was pressed
-            # clear_console()
             if self.check_path(environment, "left"):
                 print("left key pressed")
                 environment.set_coord(self._coordY, self._coordX, 0)
                 self._coordX -= 1
                 environment.set_coord(self._coordY, self._coordX, 2)
-                return self.health()
+                return self.take_health()
             else:
                 print("left key pressed - not a valid move")
                 print(self)
-                return True
+                return False
         elif ch2 == b'M' or ch2 == "C":
             # the right arrow key was pressed
-            # clear_console()
             if self.check_path(environment, "right"):
                 print("right key pressed")
                 environment.set_coord(self._coordY, self._coordX, 0)
                 self._coordX += 1
                 environment.set_coord(self._coordY, self._coordX, 2)
-                return self.health()
+                return self.take_health()
             else:
                 print("right key pressed - Not a valid move")
                 print(self)
-                return True
+                return False
 
         return False
 
-    def move_debug(self, environment):
-        """move in the maze, you need to press the enter key after keying in
-        direction, and this works in the debug mode"""
-
-        ch2 = sys.stdin.read(1)
-
-        if ch2 == "w":
-            # the up arrow key was pressed
-            print("up key pressed")
-
-            return True
-
-        elif ch2 == "s":
-            # the down arrow key was pressed
-            print("down key pressed")
-            return True
-
-        elif ch2 == "a":
-            # the left arrow key was pressed
-            print("left key pressed")
-            return True
-
-        elif ch2 == "d":
-            # the right arrow key was pressed
-            print("right key pressed")
-            return True
-
-        return False
-
-    def fight(self):
-        """fight with monsters"""
-        return
-
-    def spawn(self, maze):  # Adding Goblins and Monsters to the maze recursively
+    def spawn(self, maze):
+        """ Spawn hero in the maze at random position"""
         self._coordY = random.randint(1, len(maze) - 2)
         self._coordX = random.randint(1, len(maze[self._coordY]) - 2)
         while maze[self._coordY][self._coordX] != 0:
-            # Continue as long as don't find a 0 in the maze
             # I found this to be the most efficient way to ensure that there won't be an infinite loop
-            list_row = random.sample(range(1, len(maze) - 1),
-                                     len(maze) - 2)  # Generate a list of unique random numbers for the row
-            list_col = random.sample(range(1, len(maze[self._coordY]) - 1), len(
-                maze[self._coordY]) - 2)  # Generate a list of unique random numbers for the col
+            list_row = random.sample(range(1, len(maze) - 1), len(maze) - 2)
+            # Generate a list of unique random numbers for the row
+            list_col = random.sample(range(1, len(maze[self._coordY]) - 1), len(maze[self._coordY]) - 2)
+            # Generate a list of unique random numbers for the col
             for y in list_row:
                 for x in list_col:
                     if maze[y][x] == 0:

@@ -8,9 +8,8 @@ from helpers import rock_paper_scissors
 
 
 class Monster:
-    """define your monster class here"""
-    all_monsters = []
-    visited_monsters = []
+    all_monsters = []  # All Monster objects are stored here
+    visited_monsters = []  # All already visited Monster objects are stored here
 
     def __init__(self, coord_x, coord_y, difficulty):
         self._coordX = coord_x
@@ -24,9 +23,11 @@ class Monster:
         Monster.all_monsters.append(self)
 
     def get_coordinates(self):
+        """ Coordinates getter method """
         return self._coordX, self._coordY
 
     def visit(self, hero):
+        """ Visit method for hero to visit the monster and receive gem """
         if self not in Monster.visited_monsters:
             Monster.visited_monsters.append(self)
             hero.give_gem()
@@ -41,6 +42,7 @@ class FighterMonster(Monster):
         self._probability = round((100 - self._damage) * self._difficulty)
 
     def fight(self, hero):
+        """ Main interaction method of this Goblin """
         print("You have met a Fighter monster with", self._damage, "damage and", str(self._probability) +
               "% probability to hit you")
         probability_list = range(1, self._probability + 1)  # list of numbers stating the probability
@@ -59,6 +61,7 @@ class ThiefMonster(Monster):
         self._probability = round(((500 - self._steal) * self._difficulty) / 5)
 
     def steal(self, hero):
+        """ Main interaction method of this Goblin """
         print("You have met a Thief monster with", self._steal, "coin steal and", str(self._probability) +
               "% probability to steal from you")
         probability_list = range(1, self._probability + 1)  # list of numbers stating the probability
@@ -71,6 +74,7 @@ class ThiefMonster(Monster):
 
 
 class GamerMonster(Monster):
+    """ Main interaction method of this Goblin """
     def __init__(self, coord_x, coord_y, difficulty):
         super(GamerMonster, self).__init__(coord_x, coord_y, difficulty)
         self._damage = random.randint(1, 50)

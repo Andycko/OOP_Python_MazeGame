@@ -19,15 +19,17 @@ MONSTER_CHAR = "M"
 
 
 class _Environment:
-    """Environment includes Maze"""
+    """Environment includes Maze with characters"""
 
     def __init__(self, maze):
         self._environment = deepcopy(maze)
 
     def set_coord(self, x, y, val):
+        """ Value setter method at certain coordinates """
         self._environment[x][y] = val
 
     def get_coord(self, x, y):
+        """ Value getter method at certain coordinates """
         return self._environment[x][y]
 
     def update_environment(self, hero):
@@ -36,6 +38,7 @@ class _Environment:
             coordx, coordy = monster.get_coordinates()
             h_coordx, h_coordy = hero.get_coordinates()
             if coordx == h_coordx and coordy == h_coordy:
+                # if hero and moster colide, let hero be on that place, but monster will retain its coordinates
                 continue
             self._environment[coordy][coordx] = 4
 
@@ -62,15 +65,15 @@ class Game:
     _count = 0
 
     def __init__(self, difficulty, name=""):
-        if difficulty == "load":
+        if difficulty == "load":  # If the player decides to load instead of a new game, call load_game() method
             if not self.load_game():
                 exit()
         else:
             self.difficulty = difficulty
             self.myHero = Hero(name)
-            self.maze = make_maze_recursion(17, 17, difficulty)
+            self.maze = make_maze_recursion(17, 17, difficulty)  # returning maze with monsters and goblins
             self.maze = self.myHero.spawn(self.maze)  # Spawning hero, returning maze with the hero in it
-            self.MyEnvironment = _Environment(self.maze)  # initial environment is the maze itself
+            self.MyEnvironment = _Environment(self.maze)  # Environment is the maze with all characters
             self._count = 0
 
     def menu(self):
@@ -80,18 +83,20 @@ class Game:
         if command == "help":
             print("Commands you can use:"
                   "\n\thelp\t- prints list of all commands"
-                  "\n\tscore\t- prints your score"
+                  "\n\tscoreboard\t- prints your score"
+                  "\n\tmap\t- prints out the map of the current maze"
                   "\n\tsave\t- save the current state of the game"
                   "\n\texit\t- exits the game")
-        elif command == "score":
+        elif command == "scoreboard":
             print("This is the current scoreboard, to be in it, finish your game first.")
             self.print_scoreboard()
+        elif command == "map":
+            self.MyEnvironment.print_environment(self.myHero)
         elif command == "save":
             self.save_game()
         elif command == "exit":
             self.myHero.aborted = True
             clear_console()
-            return False
         else:
             print("Sorry, not a valid command. Try inputting :help for list of commands")
 
@@ -104,7 +109,8 @@ class Game:
             "visited_monsters": Monster.visited_monsters,
             "all_goblins": Goblin.all_goblins,
             "environment": self.MyEnvironment,
-            "difficulty": self.difficulty
+            "difficulty": self.difficulty,
+            "move_count": self._count
         }
         pickle.dump(save, open("misc/save_file.dat", "wb"))
         clear_console()
@@ -123,6 +129,7 @@ class Game:
             Goblin.all_goblins = load.get("all_goblins")
             self.MyEnvironment = load.get("environment")
             self.difficulty = load.get("difficulty")
+            self._count = load.get("move_count")
         except FileNotFoundError:
             print("There is no valid last save of the game. Please start a new one or save your current game.")
             return False
@@ -166,9 +173,9 @@ class Game:
                     rep = 1
                     players[name] = player["player"]["score"]
 
-                # part of next line coppied from https://ide.geeksforgeeks.org/5Ttw73QBJ0 and modified
-                # sorting the players based on the highest score
+                # part of next line copied from https://ide.geeksforgeeks.org/5Ttw73QBJ0 and modified
                 for player in sorted(players.items(), key=lambda kv: (kv[1], kv[0]))[::-1]:
+                    # sorting the players based on the highest score
                     if len(player[0]) <= 1:
                         tab = "\t\t"
                     else:
@@ -180,23 +187,23 @@ class Game:
                 players = {}
                 print("\n+++++++++++++++++++++++++++++")
 
-
     def play(self, loaded=False):
-        if loaded:
+        """ Main method of the Game class, starts the game and controls the game when it runs """
+        if loaded:  # loaded is true when the player chooses to load an existing game at the start
             clear_console()
             print(self.myHero)  # Just showing the health and the coins of hero at the start of the game
             self.MyEnvironment.print_environment(self.myHero)
-            print("============================", self._count)  # Leaving this here just for debugging purposes
+            print("\nMoves made:", self._count)
 
         while (not self.myHero.aborted) and (self.myHero.get_gems() < 5):
             # Checking if player has not aborted the game with :exit command or died
             ch = getch()
             if ch == '\033' or ch == b'\xe0':  # Checking if player is pressing arrow keys
                 clear_console()
-                self.myHero.move(self.MyEnvironment, ch)
+                if self.myHero.move(self.MyEnvironment, ch):
+                    self._count += 1
                 self.MyEnvironment.print_environment(self.myHero)
-                self._count += 1
-                print("============================", self._count)
+                print("\nMoves made:", self._count)
             else:
                 if ch == b':' or ch == ":":  # Checking if player inputs : for command input
                     self.menu()
@@ -208,10 +215,12 @@ class Game:
                   "\nFeel free to find your name on the scoreboard.")
             self.save_score()
             self.print_scoreboard()
-            print("Thank you for playing the Maze Game made by Andrej Szalma! Feel free to check out the code on my github -> https://github.com/Andycko/OOP_Python_MazeGame")
+            print("Thank you for playing the Maze Game made by Andrej Szalma! Feel free to check out the code on my"
+                  "github -> https://github.com/Andycko/OOP_Python_MazeGame")
         else:
             self.print_scoreboard()
-            print("Thank you for playing the Maze Game made by Andrej Szalma! Feel free to check out the code on my github -> https://github.com/Andycko/OOP_Python_MazeGame")
+            print("Thank you for playing the Maze Game made by Andrej Szalma! Feel free to check out the code on my"
+                  "github -> https://github.com/Andycko/OOP_Python_MazeGame")
 
 
 def welcome_screen():
@@ -255,11 +264,16 @@ def welcome_screen():
     return difficulty, name
 
 
-if __name__ == "__main__":
+def launch_game():
+    """ use this function to launch the game"""
     out = welcome_screen()
     if len(out) == 2:
-        myGame = Game(out[0], out[1])
-        myGame.play(True)
+        my_game = Game(out[0], out[1])
+        my_game.play(True)
     else:
-        myGame = Game(out)
-        myGame.play()
+        my_game = Game(out)
+        my_game.play()
+
+
+if __name__ == "__main__":
+    launch_game()
